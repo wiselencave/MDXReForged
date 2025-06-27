@@ -50,8 +50,8 @@ namespace MDXReForged.MDX
         public CExtent Bounds;
         public uint SelectionGroup;
         public bool Unselectable;
-        public uint LevelOfDetail;
-        public string FilePath;
+        public LevelOfDetail Level;
+        public string Name;
 
         public uint NrOfExtents;
         public List<CExtent> Extents = new List<CExtent>();
@@ -129,8 +129,8 @@ namespace MDXReForged.MDX
 
             if (version >= 900)
             {
-                LevelOfDetail = br.ReadUInt32();
-                FilePath = br.ReadCString(Constants.SizeName);
+                Level = (LevelOfDetail)br.ReadUInt32();
+                Name = br.ReadCString(Constants.SizeName);
             }
 
             Bounds = new CExtent(br);
@@ -177,5 +177,12 @@ namespace MDXReForged.MDX
                     TexCoords[i].Add(new CVector2(br));
             }
         }
+    }
+    public enum LevelOfDetail : uint
+    {
+        Default = 0,
+        Hight = 1,
+        Medium = 2,
+        Low = 3
     }
 }
