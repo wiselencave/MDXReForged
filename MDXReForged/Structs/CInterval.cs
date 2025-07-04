@@ -2,7 +2,7 @@
 
 namespace MDXReForged.Structs
 {
-    public class CInterval
+    public struct CInterval
     {
         public int Start;
         public int End;

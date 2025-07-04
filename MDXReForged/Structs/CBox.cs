@@ -2,7 +2,7 @@
 
 namespace MDXReForged.Structs
 {
-    public class CBox
+    public struct CBox
     {
         public CVector3 Min;
         public CVector3 Max;

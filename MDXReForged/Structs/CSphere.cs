@@ -2,7 +2,7 @@
 
 namespace MDXReForged.Structs
 {
-    public class CSphere
+    public struct CSphere
     {
         public CVector3 Center;
         public float Radius;

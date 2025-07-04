@@ -2,7 +2,7 @@
 
 namespace MDXReForged.Structs
 {
-    public class CPlane
+    public struct CPlane
     {
         public float Length;
         public float Width;

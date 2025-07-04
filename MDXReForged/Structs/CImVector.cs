@@ -2,7 +2,7 @@
 
 namespace MDXReForged.Structs
 {
-    public class CImVector
+    public struct CImVector
     {
         public byte B;
         public byte G;

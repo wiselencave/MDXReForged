@@ -2,7 +2,7 @@
 
 namespace MDXReForged.Structs
 {
-    public class CVector2
+    public struct CVector2
     {
         public float X;
         public float Y;

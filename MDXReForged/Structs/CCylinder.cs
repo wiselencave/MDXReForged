@@ -2,7 +2,7 @@
 
 namespace MDXReForged.Structs
 {
-    public class CCylinder
+    public struct CCylinder
     {
         public CVector3 Base;
         public float Height;
