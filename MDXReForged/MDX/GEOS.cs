@@ -50,7 +50,7 @@ namespace MDXReForged.MDX
         public CExtent Bounds;
         public uint SelectionGroup;
         public bool Unselectable;
-        public LevelOfDetail Level;
+        public LEVEL_OF_DETAIL Level;
         public string Name;
 
         public uint NrOfExtents;
@@ -129,7 +129,7 @@ namespace MDXReForged.MDX
 
             if (version >= 900)
             {
-                Level = (LevelOfDetail)br.ReadUInt32();
+                Level = (LEVEL_OF_DETAIL)br.ReadUInt32();
                 Name = br.ReadCString(Constants.SizeName);
             }
 
@@ -177,12 +177,5 @@ namespace MDXReForged.MDX
                     TexCoords[i].Add(new CVector2(br));
             }
         }
-    }
-    public enum LevelOfDetail : uint
-    {
-        Default = 0,
-        Hight = 1,
-        Medium = 2,
-        Low = 3
     }
 }

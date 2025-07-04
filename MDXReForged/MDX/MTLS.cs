@@ -65,7 +65,7 @@ namespace MDXReForged.MDX
         public Track<float> FresnelTeamColorKeys;
 
         // If version >= 1100
-        public LayerShader ShaderId;
+        public LAYER_SHADER ShaderId;
         public List<TextureEntry> Textures = new List<TextureEntry>();
 
         public Layer(BinaryReader br, uint version)
@@ -89,7 +89,7 @@ namespace MDXReForged.MDX
             // Version 1100+: Shader + multiple textures with semantics
             if (version >= 1100)
             {
-                ShaderId = (LayerShader)br.ReadUInt32();
+                ShaderId = (LAYER_SHADER)br.ReadUInt32();
                 uint textureCount = br.ReadUInt32();
 
                 for (uint i = 0; i < textureCount; i++)
@@ -97,7 +97,7 @@ namespace MDXReForged.MDX
                     var tex = new TextureEntry
                     {
                         TextureId = br.ReadUInt32(),
-                        Semantic = (TextureSemantic)br.ReadUInt32()
+                        Semantic = (TEXTURE_SEMANTIC)br.ReadUInt32()
                     };
 
                     string maybeTag = br.ReadCString(4);
@@ -136,30 +136,16 @@ namespace MDXReForged.MDX
                 }
             }
         }
-        public uint? GetTextureId(TextureSemantic semantic)
+        public uint? GetTextureId(TEXTURE_SEMANTIC semantic)
         {
             return Textures.FirstOrDefault(t => t.Semantic == semantic)?.TextureId;
         }
-    }
-    public enum LayerShader : uint
-    {
-        SD = 0,
-        HD = 1
-    }
-    public enum TextureSemantic : uint
-    {
-        Diffuse = 0,
-        Normal = 1,
-        ORM = 2,
-        Emissive = 3,
-        TeamColor = 4,
-        Reflection = 5
     }
 
     public class TextureEntry
     {
         public uint TextureId;
-        public TextureSemantic Semantic;
+        public TEXTURE_SEMANTIC Semantic;
         public Track<int> FlipKeys;
     }
 }

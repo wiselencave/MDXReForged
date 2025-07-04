@@ -124,5 +124,29 @@ namespace MDXReForged
         PARTICLE_XYQUADS = 0x00100000,
     }
 
+    public enum LAYER_SHADER : uint
+    {
+        LAYER_SHADER_SD = 0,
+        LAYER_SHADER_HD = 1
+    }
+
+    public enum TEXTURE_SEMANTIC : uint
+    {
+        TEXTURE_SEMANTIC_DIFFUSE = 0,
+        TEXTURE_SEMANTIC_NORMAL = 1,
+        TEXTURE_SEMANTIC_ORM = 2,
+        TEXTURE_SEMANTIC_EMISSIVE = 3,
+        TEXTURE_SEMANTIC_TEAMCOLOR = 4,
+        TEXTURE_SEMANTIC_REFLECTION = 5
+    }
+
+    public enum LEVEL_OF_DETAIL : uint
+    {
+        LOD_DEFAULT = 0,
+        LOD_HIGH = 1,
+        LOD_MEDIUM = 2,
+        LOD_LOW = 3
+    }
+
     #endregion ENUMS
 }
