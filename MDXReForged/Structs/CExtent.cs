@@ -2,10 +2,10 @@
 
 namespace MDXReForged.Structs
 {
-    public class CExtent
+    public readonly struct CExtent
     {
-        public float Radius;
-        public CBox Extent;
+        public readonly float Radius;
+        public readonly CBox Extent;
 
         public CExtent() => Extent = new CBox();
 

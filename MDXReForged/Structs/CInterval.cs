@@ -2,11 +2,11 @@
 
 namespace MDXReForged.Structs
 {
-    public class CInterval
+    public readonly struct CInterval
     {
-        public int Start;
-        public int End;
-        public int Repeat;
+        public readonly int Start;
+        public readonly int End;
+        public readonly int Repeat;
 
         public CInterval()
         {

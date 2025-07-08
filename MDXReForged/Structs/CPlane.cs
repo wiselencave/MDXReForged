@@ -2,10 +2,10 @@
 
 namespace MDXReForged.Structs
 {
-    public class CPlane
+    public readonly struct CPlane
     {
-        public float Length;
-        public float Width;
+        public readonly float Length;
+        public readonly float Width;
 
         public CPlane(BinaryReader br)
         {

@@ -2,10 +2,10 @@
 
 namespace MDXReForged.Structs
 {
-    public class CSphere
+    public readonly struct CSphere
     {
-        public CVector3 Center;
-        public float Radius;
+        public readonly CVector3 Center;
+        public readonly float Radius;
 
         public CSphere(BinaryReader br)
         {

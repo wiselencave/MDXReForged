@@ -33,7 +33,7 @@ namespace MDXReForged.MDX
         public uint NrOfFaceGroups;
         public List<uint> FaceGroups = new List<uint>();
         public uint NrOfFaceVertices;
-        public List<CVertex> FaceVertices = new List<CVertex>();
+        public List<CTriangle> FaceVertices = new List<CTriangle>();
 
         public uint NrOfVertexGroupIndices;
         public List<byte> VertexGroupIndices = new List<byte>();
@@ -97,7 +97,7 @@ namespace MDXReForged.MDX
             {
                 NrOfFaceVertices = br.ReadUInt32();
                 for (int i = 0; i < NrOfFaceVertices / 3; i++)
-                    FaceVertices.Add(new CVertex(br));
+                    FaceVertices.Add(new CTriangle(br));
             }
 
             //Vertex Groups

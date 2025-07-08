@@ -2,10 +2,10 @@
 
 namespace MDXReForged.Structs
 {
-    public class CBox
+    public readonly struct CBox
     {
-        public CVector3 Min;
-        public CVector3 Max;
+        public readonly CVector3 Min;
+        public readonly CVector3 Max;
 
         public CBox()
         {

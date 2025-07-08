@@ -2,10 +2,10 @@
 
 namespace MDXReForged.Structs
 {
-    public class CVector2
+    public readonly struct CVector2
     {
-        public float X;
-        public float Y;
+        public readonly float X;
+        public readonly float Y;
 
         public CVector2()
         {

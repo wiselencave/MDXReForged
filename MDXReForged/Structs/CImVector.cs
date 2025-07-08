@@ -2,12 +2,12 @@
 
 namespace MDXReForged.Structs
 {
-    public class CImVector
+    public readonly struct CImVector
     {
-        public byte B;
-        public byte G;
-        public byte R;
-        public byte A;
+        public readonly byte B;
+        public readonly byte G;
+        public readonly byte R;
+        public readonly byte A;
 
         public CImVector()
         {

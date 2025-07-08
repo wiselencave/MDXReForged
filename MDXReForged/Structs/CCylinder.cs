@@ -2,11 +2,11 @@
 
 namespace MDXReForged.Structs
 {
-    public class CCylinder
+    public readonly struct CCylinder
     {
-        public CVector3 Base;
-        public float Height;
-        public float Radius;
+        public readonly CVector3 Base;
+        public readonly float Height;
+        public readonly float Radius;
 
         public CCylinder(BinaryReader br)
         {
