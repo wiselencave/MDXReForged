@@ -41,10 +41,9 @@ namespace MDXReForged.MDX
         public List<uint> MatrixGroups = new List<uint>();
         public uint NrOfMatrixIndexes;
         public List<uint> MatrixIndexes = new List<uint>();
-        public uint NrOfBoneIndexes;
-        public List<uint> BoneIndexes = new List<uint>();
+
         public uint SkinSize;
-        public List<uint> BoneWeights = new List<uint>();
+        public List<CSkinData> Skin = new List<CSkinData>();
 
         public uint MaterialId;
         public CExtent Bounds;
@@ -152,11 +151,19 @@ namespace MDXReForged.MDX
             if (br.HasTag("SKIN"))
             {
                 SkinSize = br.ReadUInt32();
-                for (int i = 0; i < SkinSize / 8; i++)
+
+                int vertexCount = (int)(SkinSize / 8);
+                for (int i = 0; i < vertexCount; i++)
                 {
-                    // looks like a C2iVector
-                    BoneIndexes.Add(br.ReadUInt32());
-                    BoneWeights.Add(br.ReadUInt32());
+                    byte[] indices = new byte[4];
+                    byte[] weights = new byte[4];
+
+                    for (int j = 0; j < 4; j++)
+                        indices[j] = br.ReadByte();
+                    for (int j = 0; j < 4; j++)
+                        weights[j] = br.ReadByte();
+
+                    Skin.Add(new CSkinData(indices, weights));
                 }
             }
 
