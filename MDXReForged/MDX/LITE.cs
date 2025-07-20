@@ -1,4 +1,5 @@
 ﻿using MDXReForged.Structs;
+using System;
 using System.IO;
 
 namespace MDXReForged.MDX
@@ -9,7 +10,7 @@ namespace MDXReForged.MDX
         {
             long end = br.BaseStream.Position + Size;
             while (br.BaseStream.Position < end)
-                Values.Add(new Light(br));
+                Values.Add(new Light(br, version));
         }
     }
 
@@ -24,6 +25,7 @@ namespace MDXReForged.MDX
         public float Intensity;
         public CVector3 AmbientColor;
         public float AmbientIntensity;
+        public float ShadowIntensity;
 
         public Track<float> AttenStartKeys;
         public Track<float> AttenEndKeys;
@@ -33,7 +35,7 @@ namespace MDXReForged.MDX
         public Track<float> AmbIntensityKeys;
         public Track<float> VisibilityKeys;
 
-        public Light(BinaryReader br)
+        public Light(BinaryReader br, uint version)
         {
             long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
 
@@ -50,8 +52,11 @@ namespace MDXReForged.MDX
             AttenuationEnd = br.ReadSingle();
             Color = new CVector3(br);
             Intensity = br.ReadSingle();
-            AmbientColor = new CVector3(br);    // added at version 700
-            AmbientIntensity = br.ReadSingle(); // added at version 700
+            AmbientColor = new CVector3(br);
+            AmbientIntensity = br.ReadSingle();
+
+            if (version > 1100)
+                ShadowIntensity = br.ReadSingle();
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
