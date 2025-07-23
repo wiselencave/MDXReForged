@@ -5,15 +5,15 @@ namespace MDXReForged.MDX
 {
     public class GenObject
     {
-        public uint ObjSize;
-        public string Name;
-        public int ObjectId;
-        public int ParentId;
-        public GENOBJECTFLAGS Flags;
+        public uint ObjSize { get; protected set; }
+        public string Name { get; protected set; }
+        public int ObjectId { get; protected set; }
+        public int ParentId { get; protected set; }
+        public GENOBJECTFLAGS Flags { get; protected set; }
 
-        public Track<CVector3> TranslationKeys;
-        public Track<CVector4> RotationKeys;
-        public Track<CVector3> ScaleKeys;
+        public Track<CVector3> TranslationKeys { get; private set; } = Track<CVector3>.Empty;
+        public Track<CVector4> RotationKeys { get; private set; } = Track<CVector4>.Empty;
+        public Track<CVector3> ScaleKeys { get; private set; } = Track<CVector3>.Empty;
 
         public void LoadTracks(BinaryReader br)
         {

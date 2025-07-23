@@ -71,15 +71,6 @@ namespace MDXReForged
         NUM_PARTICLE_TYPES = 0x3,
     }
 
-    public enum PARTICLE_EMITTER_TYPE
-    {
-        PET_BASE = 0x0,
-        PET_PLANE = 0x1,
-        PET_SPHERE = 0x2,
-        PET_SPLINE = 0x3,
-        NUM_PARTICLE_EMITTER_TYPES = 0x4,
-    }
-
     public enum MDLTRACKTYPE
     {
         TRACK_NO_INTERP = 0x0,
@@ -122,6 +113,20 @@ namespace MDXReForged
         PARTICLE_UNFOGGED = 0x00040000,
         PARTICLE_USE_MODEL_SPACE = 0x00080000,
         PARTICLE_XYQUADS = 0x00100000,
+    }
+
+    public enum PRIMITIVE_TYPE : uint
+    {
+        TYPE_POINTS = 0,
+        TYPE_LINES = 1,
+        TYPE_LINELOOP = 2,
+        TYPE_LINESTRIP = 3,
+        TYPE_TRIANGLES = 4,
+        TYPE_TRIANGLESTRIP = 5,
+        TYPE_TRIANGLEFAN = 6,
+        TYPE_QUADS = 7,
+        TYPE_QUADSTRIP = 8,
+        TYPE_POLYGONS = 9
     }
 
     public enum LAYER_SHADER : uint

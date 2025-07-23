@@ -14,8 +14,7 @@ namespace MDXReForged.MDX
 
     public class Event : GenObject
     {
-        public uint TotalSize;
-        public SimpleTrack EventKeys;
+        public SimpleTrack EventKeys { get; }
 
         public Event(BinaryReader br)
         {

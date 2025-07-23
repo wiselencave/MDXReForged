@@ -14,8 +14,8 @@ namespace MDXReForged.MDX
 
     public class Bone : GenObject
     {
-        public int GeosetId;
-        public int GeosetAnimId;
+        public int GeosetId { get; }
+        public int GeosetAnimId { get; }
 
         public Bone(BinaryReader br)
         {

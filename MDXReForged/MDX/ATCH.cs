@@ -14,15 +14,13 @@ namespace MDXReForged.MDX
 
     public class Attachment : GenObject
     {
-        public uint TotalSize;
-        public int AttachmentId;
-        public byte Padding;
-        public string Path;
-        public Track<float> VisibilityKeys;
+        public int AttachmentId { get;  }
+        public string Path { get; }
+        public Track<float> VisibilityKeys { get; } = Track<float>.Empty;
 
         public Attachment(BinaryReader br)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            long end = br.BaseStream.Position + br.ReadUInt32();
 
             ObjSize = br.ReadUInt32();
             Name = br.ReadCString(Constants.SizeName);

@@ -15,14 +15,14 @@ namespace MDXReForged.MDX
 
     public class Sequence
     {
-        public string Name;
-        public int MinTime;
-        public int MaxTime;
-        public float MoveSpeed;
-        public bool NonLooping;
-        public float Frequency;
-        public uint SyncPoint;
-        public CExtent Bounds;
+        public string Name { get; }
+        public int MinTime { get; }
+        public int MaxTime { get; }
+        public float MoveSpeed { get; }
+        public bool NonLooping { get; }
+        public float Frequency { get; }
+        public uint SyncPoint { get; }
+        public CExtent Bounds { get; }
 
         public Sequence(BinaryReader br)
         {

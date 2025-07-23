@@ -14,9 +14,9 @@ namespace MDXReForged.MDX
 
     public class Texture
     {
-        public uint ReplaceableId;
-        public string Image;
-        public TEXFLAGS Flags;
+        public uint ReplaceableId { get; }
+        public string Image { get; }
+        public TEXFLAGS Flags { get; }
 
         public Texture(BinaryReader br)
         {

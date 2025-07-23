@@ -14,26 +14,25 @@ namespace MDXReForged.MDX
 
     public class ParticleEmitter : GenObject
     {
-        public uint TotalSize;
-        public float EmissionRate;
-        public float Gravity;
-        public float Longitude;
-        public float Latitude;
-        public string Path;
-        public float Lifespan;
-        public float Speed;
+        public float EmissionRate { get; }
+        public float Gravity { get; }
+        public float Longitude { get; }
+        public float Latitude { get; }
+        public string Path { get; }
+        public float Lifespan { get; }
+        public float Speed { get; }
 
-        public Track<float> EmissionKeys;
-        public Track<float> GravityKeys;
-        public Track<float> LongitudeKeys;
-        public Track<float> LatitudeKeys;
-        public Track<float> LifespanKeys;
-        public Track<float> SpeedKeys;
-        public Track<float> VisibilityKeys;
+        public Track<float> EmissionKeys { get; } = Track<float>.Empty;
+        public Track<float> GravityKeys { get; } = Track<float>.Empty;
+        public Track<float> LongitudeKeys { get; } = Track<float>.Empty;
+        public Track<float> LatitudeKeys { get; } = Track<float>.Empty;
+        public Track<float> LifespanKeys { get; } = Track<float>.Empty;
+        public Track<float> SpeedKeys { get; } = Track<float>.Empty;
+        public Track<float> VisibilityKeys { get; } = Track<float>.Empty;
 
         public ParticleEmitter(BinaryReader br)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            long end = br.BaseStream.Position + br.ReadUInt32();
 
             ObjSize = br.ReadUInt32();
             Name = br.ReadCString(Constants.SizeName);

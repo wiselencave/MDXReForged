@@ -7,8 +7,6 @@ namespace MDXReForged.Structs
         public readonly float Radius;
         public readonly CBox Extent;
 
-        public CExtent() => Extent = new CBox();
-
         public CExtent(BinaryReader br)
         {
             Radius = br.ReadSingle();

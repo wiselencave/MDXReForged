@@ -11,7 +11,6 @@ namespace MDXReForged.MDX
         public EnumerableBaseChunk(BinaryReader br, uint version) : base(br, version)
         { }
 
-
         public T this[int index] => Values[index];
 
         public int Count => Values.Count;

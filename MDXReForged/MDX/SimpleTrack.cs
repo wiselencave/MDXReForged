@@ -4,12 +4,14 @@ namespace MDXReForged.MDX
 {
     public class SimpleTrack
     {
-        public string Name;
-        public uint NrOfTracks;
-        public int GlobalSequenceId;
-        public uint[] Time;
-        public uint[] Keys;
+        public static readonly SimpleTrack Empty = new SimpleTrack();
+        public string Name { get; }
+        public uint NrOfTracks { get;  }
+        public int GlobalSequenceId { get;  }
+        public uint[] Time { get; }
+        public uint[] Keys { get; }
 
+        private SimpleTrack() { }
         public SimpleTrack(BinaryReader br, bool hastime)
         {
             br.BaseStream.Position -= 4;
@@ -35,5 +37,6 @@ namespace MDXReForged.MDX
                     Keys[i] = br.ReadUInt32();
             }
         }
+        public bool IsEmpty => ReferenceEquals(this, Empty);
     }
 }

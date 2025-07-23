@@ -15,15 +15,9 @@ namespace MDXReForged.MDX
         }
     }
 
-    public class FaceFX
+    public class FaceFX(BinaryReader br)
     {
-        public string Node;
-        public string FilePath;
-
-        public FaceFX(BinaryReader br)
-        {
-            Node = br.ReadCString(Constants.SizeName);
-            FilePath = br.ReadCString(Constants.SizeFileName);
-        }
+        public string Node { get; } = br.ReadCString(Constants.SizeName);
+        public string FilePath { get; } = br.ReadCString(Constants.SizeFileName);
     }
 }

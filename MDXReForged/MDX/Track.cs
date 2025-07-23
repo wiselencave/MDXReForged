@@ -5,13 +5,17 @@ namespace MDXReForged.MDX
 {
     public class Track<T> where T : new()
     {
-        public string Name;
-        public uint NrOfTracks;
-        public MDLTRACKTYPE InterpolationType;
-        public int GlobalSequenceId;
-        public CAnimatorNode<T>[] Nodes;
+        public static readonly Track<T> Empty = new Track<T>();
+        public string Name { get; private set; }
+        public uint NrOfTracks { get; private set; }
+        public MDLTRACKTYPE InterpolationType { get; private set; }
+        public int GlobalSequenceId { get; private set; }
+        public CAnimatorNode<T>[] Nodes { get; private set; }
 
-        public Track(BinaryReader br)
+        private Track() { }
+
+        public Track(BinaryReader br) => Load(br);
+        public void Load(BinaryReader br)
         {
             br.BaseStream.Position -= 4;
 
@@ -39,6 +43,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
+        public bool IsEmpty => ReferenceEquals(this, Empty);
 
         private T CreateInstance(BinaryReader br)
         {
@@ -58,10 +63,10 @@ namespace MDXReForged.MDX
 
     public class CAnimatorNode<T>
     {
-        public uint Time;
-        public T Value;
-        public T InTangent;
-        public T OutTangent;
+        public uint Time { get; }
+        public T Value { get; }
+        public T InTangent { get; }
+        public T OutTangent { get; }
 
         public CAnimatorNode(uint Time, T Value)
         {

@@ -15,25 +15,25 @@ namespace MDXReForged.MDX
 
     public class RibbonEmitter : GenObject
     {
-        public uint TotalSize;
-        public float HeightAbove;
-        public float HeightBelow;
-        public float Alpha;
-        public CVector3 Color;
-        public uint EdgesPerSecond;
-        public float Lifetime;
-        public uint TextureSlot;
-        public uint TextureRows;
-        public uint TextureColumns;
-        public uint MaterialId;
-        public float Gravity;
+        public uint TotalSize { get; }
+        public float HeightAbove { get; }
+        public float HeightBelow { get; }
+        public float Alpha { get; }
+        public CVector3 Color { get; }
+        public uint EdgesPerSecond { get; }
+        public float Lifetime { get; }
+        public uint TextureSlot { get; }
+        public uint TextureRows { get; }
+        public uint TextureColumns { get; }
+        public uint MaterialId { get; }
+        public float Gravity { get; }
 
-        public Track<float> HeightAboveKeys;
-        public Track<float> HeightBelowKeys;
-        public Track<float> AlphaKeys;
-        public Track<float> VisibilityKeys;
-        public Track<CVector3> ColorKeys;
-        public Track<uint> TextureKeys;
+        public Track<float> HeightAboveKeys { get; } = Track<float>.Empty;
+        public Track<float> HeightBelowKeys { get; } = Track<float>.Empty;
+        public Track<float> AlphaKeys { get; } = Track<float>.Empty;
+        public Track<float> VisibilityKeys { get; } = Track<float>.Empty;
+        public Track<CVector3> ColorKeys { get; } = Track<CVector3>.Empty;
+        public Track<uint> TextureKeys { get; } = Track<uint>.Empty;
 
         public RibbonEmitter(BinaryReader br)
         {

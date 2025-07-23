@@ -5,10 +5,10 @@ namespace MDXReForged.MDX
 {
     public class MODL : BaseChunk
     {
-        public string Name;
-        public string AnimationFile;
-        public CExtent Bounds;
-        public uint BlendTime;
+        public string Name { get; }
+        public string AnimationFile { get; }
+        public CExtent Bounds { get; }
+        public uint BlendTime { get; }
 
         public MODL(BinaryReader br, uint version) : base(br, version)
         {

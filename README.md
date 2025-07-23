@@ -2,7 +2,44 @@
 
 Experiments with reading the new Warcraft 3: Reforged MDX files. 
 
-The project *should be* compliant with all of the models used in the current client (as of time of writing) although it may not be with the full spec (some chunks are never used).
+The project *should be* compliant with all of the models used in the current client (as of time of writing).
+
+## 2025 – Major Changes
+
+### Format updates:
+- Added support for `MDX1000`. Updated `LAYS`.
+- Added support for `MDX1100`. Updated `MTLS`. Updated `LAYS`:
+    - Added support for multi-texturing.
+    - Introduced new `TextureEntry` class that holds the texture ID, semantic, and optional flip track.
+    - Layers now can expose a `Textures` list instead of a single `TextureId`.
+    - Added `GetTextureId(semantic)` method for easy texture lookup by purpose (e.g., diffuse, normal, emissive).
+
+- Added support for `MDX1200`. Updated `LITE`.
+- Reworked `GEOS`:
+  - Added enums for level of detail and primitive types (polygon section).
+  - Parser no longer reorders indices into triangles automatically. Raw index buffer is now preserved, with new helper methods `EnumerateGroups` and `EnumerateTriangles`.
+  - Vertex influences and weights merged into new `CSkinData` structure for skinning.
+- Updated property names for `CORN`.
+- Removed non-existent fields from `PRE2`.
+- Refactored the `C34Matrix` structure.
+- Removed unused structures and fields. `SNDS` parser was removed.
+
+### Performance improvements:
+- Core math and geometry types rewritten as structs instead of classes.
+
+### Null safety:
+- Added `GetItems<T>` for safe access to list-based chunks. If the chunk is missing, it returns an empty list. Added strongly-typed overloads (e.g., `GetBones()`, `GetTextures()`).
+- Animation tracks are now always initialized. Absent animations result in empty tracks instead of `null`.
+- Certain newer-format properties are now `nullable`.
+- Reworked `CLID`:
+  - Introduced `ICollisionGeometry` interface.
+  - Removed individual fields for `Box`, `Sphere`, `Plane`, and `Cylinder`.
+
+### Architectural changes:
+- Public fields converted to `get`-only properties.
+- Project updated to `.NET 8.0`.
+
+## Legacy
 
 #### Notable changes:
 

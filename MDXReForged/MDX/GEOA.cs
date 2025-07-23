@@ -15,18 +15,17 @@ namespace MDXReForged.MDX
 
     public class GeosetAnimation
     {
-        public int TotalSize;
-        public float Alpha;
-        public bool HasColorKeys;
-        public CVector3 Color;
-        public int GeosetId;
+        public float Alpha { get; }
+        public bool HasColorKeys { get; }
+        public CVector3 Color { get; }
+        public int GeosetId { get; }
 
-        public Track<float> AlphaKeys;
-        public Track<CVector3> ColorKeys;
+        public Track<float> AlphaKeys { get; } = Track<float>.Empty;
+        public Track<CVector3> ColorKeys { get; } = Track<CVector3>.Empty;
 
         public GeosetAnimation(BinaryReader br)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadInt32());
+            long end = br.BaseStream.Position + br.ReadInt32();
 
             Alpha = br.ReadSingle();
             HasColorKeys = br.ReadInt32() == 1;

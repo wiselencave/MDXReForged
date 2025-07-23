@@ -1,6 +1,8 @@
 ﻿using MDXReForged.Structs;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace MDXReForged.MDX
 {
@@ -16,110 +18,105 @@ namespace MDXReForged.MDX
 
     public class Geoset
     {
-        public uint TotalSize;
-        public uint NrOfVertices;
-        public List<CVector3> Vertices = new List<CVector3>();
-        public uint NrOfNormals;
-        public List<CVector3> Normals = new List<CVector3>();
-        public uint NrOfTexCoordSets;
-        public List<CVector2>[] TexCoords;
-        public uint NrOfTangents;
-        public List<CVector4> Tangents = new List<CVector4>();
+        public IReadOnlyList<CVector3> Vertices { get; }
+        public IReadOnlyList<CVector3> Normals { get; }
+        public IReadOnlyList<CVector4> Tangents { get; }
 
-        //MDLPRIMITIVES
-        public uint NrOfFaceTypeGroups;
+        public IReadOnlyList<PRIMITIVE_TYPE> FaceTypes { get; }
+        public IReadOnlyList<uint> FaceGroups { get; }
+        public IReadOnlyList<ushort> FaceIndices { get; }
 
-        public List<uint> FaceTypes = new List<uint>();
-        public uint NrOfFaceGroups;
-        public List<uint> FaceGroups = new List<uint>();
-        public uint NrOfFaceVertices;
-        public List<CTriangle> FaceVertices = new List<CTriangle>();
+        public IReadOnlyList<byte> VertexGroupIndices { get; }
+        public IReadOnlyList<uint> MatrixGroups { get; }
+        public IReadOnlyList<uint> MatrixIndexes { get; }
 
-        public uint NrOfVertexGroupIndices;
-        public List<byte> VertexGroupIndices = new List<byte>();
-        public uint NrOfMatrixGroups;
-        public List<uint> MatrixGroups = new List<uint>();
-        public uint NrOfMatrixIndexes;
-        public List<uint> MatrixIndexes = new List<uint>();
+        public IReadOnlyList<CSkinData> Skin { get; }
 
-        public uint SkinSize;
-        public List<CSkinData> Skin = new List<CSkinData>();
+        public IReadOnlyList<IReadOnlyList<CVector2>> TexCoords { get; }
 
-        public uint MaterialId;
-        public CExtent Bounds;
-        public uint SelectionGroup;
-        public bool Unselectable;
-        public LEVEL_OF_DETAIL Level;
-        public string Name;
+        public uint MaterialId { get; }
+        public CExtent Bounds { get; }
+        public uint SelectionGroup { get; }
+        public bool Unselectable { get; }
+        public LEVEL_OF_DETAIL Level { get; }
+        public string Name { get; }
 
-        public uint NrOfExtents;
-        public List<CExtent> Extents = new List<CExtent>();
+        public IReadOnlyList<CExtent> Extents { get; }
 
         public Geoset(BinaryReader br, uint version)
         {
-            _ = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            var vertices = new List<CVector3>();
+            var normals = new List<CVector3>();
+            var tangents = new List<CVector4>();
 
-            //Vertices
+            var faceTypes = new List<PRIMITIVE_TYPE>();
+            var faceGroups = new List<uint>();
+            var faceIndices = new List<ushort>();
+
+            var vertexGroups = new List<byte>();
+            var matrixGroups = new List<uint>();
+            var matrixIndexes = new List<uint>();
+
+            var skin = new List<CSkinData>();
+            var texCoords = new List<IReadOnlyList<CVector2>>();
+
+            var extents = new List<CExtent>();
+
+            long totalSize = br.BaseStream.Position + br.ReadUInt32();
+
             if (br.HasTag("VRTX"))
             {
-                NrOfVertices = br.ReadUInt32();
-                for (int i = 0; i < NrOfVertices; i++)
-                    Vertices.Add(new CVector3(br));
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    vertices.Add(new CVector3(br));
             }
 
-            //Normals
             if (br.HasTag("NRMS"))
             {
-                NrOfNormals = br.ReadUInt32();
-                for (int i = 0; i < NrOfNormals; i++)
-                    Normals.Add(new CVector3(br));
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    normals.Add(new CVector3(br));
             }
 
-            //Face Group Type
             if (br.HasTag("PTYP"))
             {
-                NrOfFaceTypeGroups = br.ReadUInt32();
-                for (int i = 0; i < NrOfFaceTypeGroups; i++)
-                    FaceTypes.Add(br.ReadUInt32());
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    faceTypes.Add((PRIMITIVE_TYPE)br.ReadUInt32());
             }
 
-            //Face Groups
             if (br.HasTag("PCNT"))
             {
-                NrOfFaceGroups = br.ReadUInt32();
-                for (int i = 0; i < NrOfFaceGroups; i++)
-                    FaceGroups.Add(br.ReadUInt32());
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    faceGroups.Add(br.ReadUInt32());
             }
 
-            //Indexes
             if (br.HasTag("PVTX"))
             {
-                NrOfFaceVertices = br.ReadUInt32();
-                for (int i = 0; i < NrOfFaceVertices / 3; i++)
-                    FaceVertices.Add(new CTriangle(br));
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    faceIndices.Add(br.ReadUInt16());
             }
 
-            //Vertex Groups
             if (br.HasTag("GNDX"))
             {
-                NrOfVertexGroupIndices = br.ReadUInt32();
-                VertexGroupIndices.AddRange(br.ReadBytes((int)NrOfVertexGroupIndices));
+                uint count = br.ReadUInt32();
+                vertexGroups.AddRange(br.ReadBytes((int)count));
             }
 
-            //Matrix Groups
             if (br.HasTag("MTGC"))
             {
-                NrOfMatrixGroups = br.ReadUInt32();
-                for (int i = 0; i < NrOfMatrixGroups; i++)
-                    MatrixGroups.Add(br.ReadUInt32());
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    matrixGroups.Add(br.ReadUInt32());
             }
 
-            //Matrix Indexes
             if (br.HasTag("MATS"))
             {
-                NrOfMatrixIndexes = br.ReadUInt32();
-                for (int i = 0; i < NrOfMatrixIndexes; i++)
-                    MatrixIndexes.Add(br.ReadUInt32());
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    matrixIndexes.Add(br.ReadUInt32());
             }
 
             MaterialId = br.ReadUInt32();
@@ -134,54 +131,110 @@ namespace MDXReForged.MDX
 
             Bounds = new CExtent(br);
 
-            //Extents
-            NrOfExtents = br.ReadUInt32();
-            for (int i = 0; i < NrOfExtents; i++)
-                Extents.Add(new CExtent(br));
+            uint nrOfExtents = br.ReadUInt32();
+            for (int i = 0; i < nrOfExtents; i++)
+                extents.Add(new CExtent(br));
 
-            //Tangents
             if (br.HasTag("TANG"))
             {
-                NrOfTangents = br.ReadUInt32();
-                for (int i = 0; i < NrOfTangents; i++)
-                    Tangents.Add(new CVector4(br));
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
+                    tangents.Add(new CVector4(br));
             }
 
-            //Skin
             if (br.HasTag("SKIN"))
             {
-                SkinSize = br.ReadUInt32();
+                uint skinSize = br.ReadUInt32();
+                int vertexCount = (int)(skinSize / 8);
 
-                int vertexCount = (int)(SkinSize / 8);
                 for (int i = 0; i < vertexCount; i++)
                 {
-                    byte[] indices = new byte[4];
-                    byte[] weights = new byte[4];
-
-                    for (int j = 0; j < 4; j++)
-                        indices[j] = br.ReadByte();
-                    for (int j = 0; j < 4; j++)
-                        weights[j] = br.ReadByte();
-
-                    Skin.Add(new CSkinData(indices, weights));
+                    byte[] indices = br.ReadBytes(4);
+                    byte[] weights = br.ReadBytes(4);
+                    skin.Add(new CSkinData(indices, weights));
                 }
             }
 
-            //TexCoordSets
             if (br.HasTag("UVAS"))
             {
-                NrOfTexCoordSets = br.ReadUInt32();
-                TexCoords = new List<CVector2>[NrOfTexCoordSets];
+                uint texSetCount = br.ReadUInt32();
+                for (int i = 0; i < texSetCount; i++)
+                {
+                    if (br.HasTag("UVBS"))
+                    {
+                        int uvCount = br.ReadInt32();
+                        var uvList = new List<CVector2>(uvCount);
+
+                        for (int j = 0; j < uvCount; j++)
+                            uvList.Add(new CVector2(br));
+
+                        texCoords.Add(uvList);
+                    }
+                    else
+                    {
+                        texCoords.Add(new List<CVector2>());
+                    }
+                }
             }
 
-            //TexCoords
-            for (int i = 0; i < NrOfTexCoordSets && br.HasTag("UVBS"); i++)
-            {
-                int NrOfTexCoords = br.ReadInt32();
-                TexCoords[i] = new List<CVector2>(NrOfTexCoords);
+            Vertices = vertices;
+            Normals = normals;
+            Tangents = tangents;
+            FaceTypes = faceTypes;
+            FaceGroups = faceGroups;
+            FaceIndices = faceIndices;
+            VertexGroupIndices = vertexGroups;
+            MatrixGroups = matrixGroups;
+            MatrixIndexes = matrixIndexes;
+            Skin = skin;
+            TexCoords = texCoords;
+            Extents = extents;
+        }
 
-                for (int j = 0; j < NrOfTexCoords; j++)
-                    TexCoords[i].Add(new CVector2(br));
+        /// <summary>
+        /// Enumerates all face groups in the mesh, returning their primitive type and corresponding index array.
+        /// </summary>
+        /// <returns>
+        /// A sequence of tuples, where each tuple contains the <see cref="PRIMITIVE_TYPE"/> and a <see cref="ushort"/> array
+        /// of indices corresponding to that group.
+        /// </returns>
+        /// <remarks>
+        /// Uses <see cref="FaceTypes"/> and <see cref="FaceGroups"/> to split the flat index buffer <see cref="FaceIndices"/>
+        /// into logical primitive groups. Each entry in <c>FaceGroups</c> specifies the number of indices in the corresponding group.
+        /// </remarks>
+        public IEnumerable<(PRIMITIVE_TYPE Type, ushort[] Indices)> EnumerateGroups()
+        {
+            if (FaceTypes.Count != FaceGroups.Count)
+                throw new InvalidOperationException("Mismatch between face type count and group size count.");
+
+            long totalExpectedIndices = FaceGroups.Sum(g => (long)g);
+
+            if (totalExpectedIndices > FaceIndices.Count)
+                throw new InvalidOperationException("Face group sizes exceed total index count.");
+
+            int offset = 0;
+            for (int i = 0; i < FaceGroups.Count; i++)
+            {
+                int size = (int)FaceGroups[i];
+                var indices = FaceIndices.Skip(offset).Take(size).ToArray();
+                yield return (FaceTypes[i], indices);
+                offset += size;
+            }
+        }
+
+        /// <summary>
+        /// Returns all triangles in the mesh, assuming only triangle primitives are present.
+        /// </summary>
+        /// <returns>List of triangles as arrays of 3 indices.</returns>
+        public IEnumerable<(ushort A, ushort B, ushort C)> EnumerateTriangles()
+        {
+            foreach (var (type, indices) in EnumerateGroups())
+            {
+                if (type != PRIMITIVE_TYPE.TYPE_TRIANGLES || indices.Length % 3 != 0)
+                    continue;
+
+                for (int i = 0; i < indices.Length; i += 3)
+                    yield return (indices[i], indices[i + 1], indices[i + 2]);
             }
         }
     }

@@ -15,15 +15,13 @@ namespace MDXReForged.MDX
 
     public class TextureAnimation
     {
-        public uint TotalSize;
-
-        public Track<CVector3> TranslationKeys;
-        public Track<CVector4> RotationKeys;
-        public Track<CVector3> ScaleKeys;
+        public Track<CVector3> TranslationKeys { get; } = Track<CVector3>.Empty;
+        public Track<CVector4> RotationKeys { get; } = Track<CVector4>.Empty;
+        public Track<CVector3> ScaleKeys { get; } = Track<CVector3>.Empty; 
 
         public TextureAnimation(BinaryReader br)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            long end = br.BaseStream.Position + br.ReadUInt32();
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {

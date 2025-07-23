@@ -1,4 +1,5 @@
 ﻿using MDXReForged.Structs;
+using System;
 using System.IO;
 
 namespace MDXReForged.MDX
@@ -15,11 +16,7 @@ namespace MDXReForged.MDX
 
     public class CollisionShape : GenObject
     {
-        public GEOM_SHAPE Type;
-        public CBox Box;
-        public CCylinder Cylinder;
-        public CSphere Sphere;
-        public CPlane Plane;
+        public ICollisionGeometry Geometry { get; }
 
         public CollisionShape(BinaryReader br)
         {
@@ -31,25 +28,31 @@ namespace MDXReForged.MDX
 
             LoadTracks(br);
 
-            Type = (GEOM_SHAPE)br.ReadUInt32();
-            switch (Type)
+            var type = (GEOM_SHAPE)br.ReadUInt32();
+            Geometry = type switch
             {
-                case GEOM_SHAPE.SHAPE_BOX:
-                    Box = new CBox(br);
-                    break;
-
-                case GEOM_SHAPE.SHAPE_CYLINDER:
-                    Cylinder = new CCylinder(br);
-                    break;
-
-                case GEOM_SHAPE.SHAPE_PLANE:
-                    Plane = new CPlane(br);
-                    break;
-
-                case GEOM_SHAPE.SHAPE_SPHERE:
-                    Sphere = new CSphere(br);
-                    break;
+                GEOM_SHAPE.SHAPE_BOX => new CBox(br),
+                GEOM_SHAPE.SHAPE_SPHERE => new CSphere(br),
+                GEOM_SHAPE.SHAPE_PLANE => new CPlane(br),
+                GEOM_SHAPE.SHAPE_CYLINDER => new CCylinder(br),
+                _ => throw new NotSupportedException($"Unknown shape: {type}")
+            };
+        }
+        public bool TryGetGeometry<T>(out T geometry) where T : struct, ICollisionGeometry
+        {
+            if (Geometry is T typed)
+            {
+                geometry = typed;
+                return true;
             }
+
+            geometry = default;
+            return false;
+        }
+
+        public interface ICollisionGeometry
+        {
+            GEOM_SHAPE ShapeType { get; }
         }
     }
 }

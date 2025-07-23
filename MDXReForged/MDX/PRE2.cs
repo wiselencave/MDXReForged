@@ -15,85 +15,58 @@ namespace MDXReForged.MDX
 
     public class ParticleEmitter2 : GenObject
     {
-        public uint TotalSize;
+        public float Speed { get; }
+        public float Variation { get; }
+        public float Latitude { get; }
+        public float Gravity { get; }
+        public float Lifespan { get; }
+        public float EmissionRate { get; }
+        public float Length { get; }
+        public float Width { get; }
+        public PARTICLE_BLEND_MODE BlendMode { get; }
+        public int Rows { get; }
+        public int Cols { get; }
+        public PARTICLE_TYPE ParticleType { get; }
+        public float TailLength { get; }
+        public float MiddleTime { get; }
+        public CVector3 StartColor { get; }
+        public CVector3 MiddleColor { get; }
+        public CVector3 EndColor { get; }
+        public float StartAlpha { get; }
+        public float MiddleAlpha { get; }
+        public float EndAlpha { get; }
+        public float StartScale { get; }
+        public float MiddleScale { get; }
+        public float EndScale { get; }
+        public uint LifespanUVAnimStart { get; }
+        public uint LifespanUVAnimEnd { get; }
+        public uint LifespanUVAnimRepeat { get; }
+        public uint DecayUVAnimStart { get; }
+        public uint DecayUVAnimEnd { get; }
+        public uint DecayUVAnimRepeat { get; }
+        public uint TailUVAnimStart { get; }
+        public uint TailUVAnimEnd { get; }
+        public uint TailUVAnimRepeat { get; }
+        public uint TailDecayUVAnimStart { get; }
+        public uint TailDecayUVAnimEnd { get; }
+        public uint TailDecayUVAnimRepeat { get; }
+        public uint Squirts { get; }
+        public uint TextureId { get; }
+        public int PriorityPlane { get; }
+        public uint ReplaceableId { get; }
 
-        public int NodeSize;
-        public PARTICLE_EMITTER_TYPE Type; //PARTICLE_EMITTER_TYPE
-        public float Speed;
-        public float Variation;
-        public float Latitude;
-        public float Longitude;
-        public float Gravity;
-        public float Lifespan;
-        public float EmissionRate;
-        public float Width;
-        public float Length;
-        public float ZSource;
-        public PARTICLE_BLEND_MODE BlendMode;
-        public PARTICLE_TYPE ParticleType; //PARTICLE_TYPE
-        public int Rows;
-        public int Cols;
-        public float TailLength;
-        public float MiddleTime;
-        public CVector3 StartColor;
-        public CVector3 MiddleColor;
-        public CVector3 EndColor;
-        public float StartAlpha;
-        public float MiddleAlpha;
-        public float EndAlpha;
-        public float StartScale;
-        public float MiddleScale;
-        public float EndScale;
-        public uint LifespanUVAnimStart;
-        public uint LifespanUVAnimEnd;
-        public uint LifespanUVAnimRepeat;
-        public uint DecayUVAnimStart;
-        public uint DecayUVAnimEnd;
-        public uint DecayUVAnimRepeat;
-        public uint TailUVAnimStart;
-        public uint TailUVAnimEnd;
-        public uint TailUVAnimRepeat;
-        public uint TailDecayUVAnimStart;
-        public uint TailDecayUVAnimEnd;
-        public uint TailDecayUVAnimRepeat;
-        public uint Squirts;
-        public uint TextureId;
-        public int PriorityPlane;
-        public uint ReplaceableId;
-        public string GeometryMdl;
-        public string RecursionMdl;
-        public float TwinkleFPS;
-        public float TwinkleOnOff;
-        public float TwinkleScaleMin;
-        public float TwinkleScaleMax;
-        public float IvelScale;
-        public CVector2 TumbleX;
-        public CVector2 TumbleY;
-        public CVector2 TumbleZ;
-        public float Drag;
-        public float Spin;
-        public CVector3 WindVector;
-        public float WindTime;
-        public float FollowSpeed1;
-        public float FollowScale1;
-        public float FollowSpeed2;
-        public float FollowScale2;
-
-        public Track<float> SpeedKeys;
-        public Track<float> VariationKeys;
-        public Track<float> LatitudeKeys;
-        public Track<float> LongitudeKeys;
-        public Track<float> ZSourceKeys;
-        public Track<float> LifespanKeys;
-        public Track<float> GravityKeys;
-        public Track<float> EmissionRateKeys;
-        public Track<float> WidthKeys;
-        public Track<float> LengthKeys;
-        public Track<float> VisibilityKeys;
+        public Track<float> SpeedKeys { get; } = Track<float>.Empty;
+        public Track<float> VariationKeys { get; } = Track<float>.Empty;
+        public Track<float> LatitudeKeys { get; } = Track<float>.Empty;
+        public Track<float> GravityKeys { get; } = Track<float>.Empty;
+        public Track<float> EmissionRateKeys { get; } = Track<float>.Empty;
+        public Track<float> WidthKeys { get; } = Track<float>.Empty;
+        public Track<float> LengthKeys { get; } = Track<float>.Empty;
+        public Track<float> VisibilityKeys { get; } = Track<float>.Empty;
 
         public ParticleEmitter2(BinaryReader br)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            long end = br.BaseStream.Position + br.ReadUInt32();
 
             ObjSize = br.ReadUInt32();
             Name = br.ReadCString(Constants.SizeName);

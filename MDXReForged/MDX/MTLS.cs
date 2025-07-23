@@ -17,16 +17,15 @@ namespace MDXReForged.MDX
 
     public class Material
     {
-        public uint TotalSize;
-        public int PriorityPlane;
-        public string Shader;
-        public uint Flags;
-        public uint NrOfLayers;
-        public List<Layer> Layers = new List<Layer>();
+        public int PriorityPlane { get; }
+        public string Shader { get; }
+        public uint Flags { get; }
+        public uint NrOfLayers { get; }
+        public List<Layer> Layers { get; } = new List<Layer>();
 
         public Material(BinaryReader br, uint version)
         {
-            TotalSize = br.ReadUInt32();     
+            var totalSize = br.ReadUInt32();     
             PriorityPlane = br.ReadInt32(); 
             Flags = br.ReadUInt32();         
 
@@ -42,35 +41,34 @@ namespace MDXReForged.MDX
 
     public class Layer
     {
-        public uint TotalSize;
-        public MDLTEXOP BlendMode;
-        public MDLGEO Flags;
-        public uint TextureId;
-        public int TextureAnimationId;
-        public int CoordId;
-        public float Alpha;
-        public Track<float> AlphaKeys;
-        public Track<int> FlipKeys;
+        public MDLTEXOP BlendMode { get; }
+        public MDLGEO Flags { get; }
+        public uint TextureId { get; }
+        public int TextureAnimationId { get; }
+        public int CoordId { get; }
+        public float Alpha { get; }
+        public Track<float> AlphaKeys { get; } = Track<float>.Empty;
+        public Track<int> FlipKeys { get; } = Track<int>.Empty;
 
-        // If version > 800
-        public float EmissiveGain;
-        public Track<float> EmissiveGainKeys;
+        // If version >= 900
+        public float? EmissiveGain { get; }
+        public Track<float> EmissiveGainKeys { get; } = Track<float>.Empty;
 
-        // If version > 900
-        public CVector3 FresnelColor;
-        public float FresnelOpacity;
-        public float FresnelTeamColor;
-        public Track<CVector3> FresnelColorKeys;
-        public Track<float> FresnelOpacityKeys;
-        public Track<float> FresnelTeamColorKeys;
+        // If version >= 1000
+        public CVector3? FresnelColor { get; }
+        public float? FresnelOpacity { get; }
+        public float? FresnelTeamColor { get; }
+        public Track<CVector3> FresnelColorKeys { get; } = Track<CVector3>.Empty;
+        public Track<float> FresnelOpacityKeys { get; } = Track<float>.Empty;
+        public Track<float> FresnelTeamColorKeys { get; } = Track<float>.Empty;
 
         // If version >= 1100
-        public LAYER_SHADER ShaderId;
-        public List<TextureEntry> Textures = new List<TextureEntry>();
+        public LAYER_SHADER? ShaderId { get; }
+        public List<TextureEntry> Textures { get; } = new List<TextureEntry>();
 
         public Layer(BinaryReader br, uint version)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            long end = br.BaseStream.Position + br.ReadUInt32();
             BlendMode = (MDLTEXOP)br.ReadInt32();
             Flags = (MDLGEO)br.ReadUInt32();
             TextureId = br.ReadUInt32();
@@ -120,8 +118,8 @@ namespace MDXReForged.MDX
                 switch (tagname)
                 {
                     case "KMTA": AlphaKeys = new Track<float>(br); break;
-                    case "KMTE": EmissiveGainKeys = new Track<float>(br); break; // > 800
-                    case "KFC3": FresnelColorKeys = new Track<CVector3>(br); break; // > 900
+                    case "KMTE": EmissiveGainKeys = new Track<float>(br); break; // >= 900
+                    case "KFC3": FresnelColorKeys = new Track<CVector3>(br); break; // >= 1000
                     case "KFCA": FresnelOpacityKeys = new Track<float>(br); break; 
                     case "KFTC": FresnelTeamColorKeys = new Track<float>(br); break;
                     case "KMTF":
@@ -144,8 +142,8 @@ namespace MDXReForged.MDX
 
     public class TextureEntry
     {
-        public uint TextureId;
-        public TEXTURE_SEMANTIC Semantic;
-        public Track<int> FlipKeys;
+        public uint TextureId { get; internal set; }
+        public TEXTURE_SEMANTIC Semantic { get; internal set; }
+        public Track<int> FlipKeys { get; internal set; } = Track<int>.Empty;
     }
 }

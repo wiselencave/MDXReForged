@@ -1,5 +1,4 @@
 ﻿using MDXReForged.Structs;
-using System;
 using System.IO;
 
 namespace MDXReForged.MDX
@@ -16,28 +15,26 @@ namespace MDXReForged.MDX
 
     public class Light : GenObject
     {
-        public uint TotalSize;
-        public LIGHT_TYPE Type;
+        public LIGHT_TYPE Type { get; }
+        public float AttenuationStart { get; }
+        public float AttenuationEnd { get;  }
+        public CVector3 Color { get; }
+        public float Intensity { get; }
+        public CVector3 AmbientColor { get; }
+        public float AmbientIntensity {  get; }
+        public float? ShadowIntensity { get; } = null;
 
-        public float AttenuationStart;
-        public float AttenuationEnd;
-        public CVector3 Color;
-        public float Intensity;
-        public CVector3 AmbientColor;
-        public float AmbientIntensity;
-        public float ShadowIntensity;
-
-        public Track<float> AttenStartKeys;
-        public Track<float> AttenEndKeys;
-        public Track<CVector3> ColorKeys;
-        public Track<float> IntensityKeys;
-        public Track<CVector3> AmbColorKeys;
-        public Track<float> AmbIntensityKeys;
-        public Track<float> VisibilityKeys;
+        public Track<float> AttenStartKeys { get; } = Track<float>.Empty;
+        public Track<float> AttenEndKeys { get; } = Track<float>.Empty;
+        public Track<CVector3> ColorKeys { get; } = Track<CVector3>.Empty;
+        public Track<float> IntensityKeys { get; } = Track<float>.Empty;
+        public Track<CVector3> AmbColorKeys { get; } = Track<CVector3>.Empty;
+        public Track<float> AmbIntensityKeys { get; } = Track<float>.Empty;
+        public Track<float> VisibilityKeys { get; } = Track<float>.Empty;
 
         public Light(BinaryReader br, uint version)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            long end = br.BaseStream.Position + br.ReadUInt32();
 
             ObjSize = br.ReadUInt32();
             Name = br.ReadCString(Constants.SizeName);
@@ -55,7 +52,7 @@ namespace MDXReForged.MDX
             AmbientColor = new CVector3(br);
             AmbientIntensity = br.ReadSingle();
 
-            if (version > 1100)
+            if (version >= 1200)
                 ShadowIntensity = br.ReadSingle();
 
             while (br.BaseStream.Position < end && !br.AtEnd())

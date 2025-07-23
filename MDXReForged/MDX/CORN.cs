@@ -15,28 +15,25 @@ namespace MDXReForged.MDX
 
     public class ParticleEmitterPopcorn : GenObject
     {
-        public uint TotalSize;
-        public float Float1;
-        public float Float2;
-        public float Float3;
-        public float Float4;
-        public float Float5;
-        public float Float6;
-        public float Float7;
-        public uint UInt1;
-        public string FilePath;
-        public string AnimVisibilityGuide;
+        public float LifeSpan { get;  }
+        public float EmissionRate { get;  }
+        public float Speed { get; }
+        public CVector3 Color { get; }
+        public float Alpha { get; }
+        public uint ReplaceableId { get; }
+        public string FilePath { get; }
+        public string AnimVisibilityGuide { get; }
 
-        public Track<float> SpeedKeys;
-        public Track<float> VisibilityKeys;
-        public Track<float> LifespanKeys;
-        public Track<float> AlphaKeys;
-        public Track<float> EmissionRateKeys;
-        public Track<CVector3> ColorKeys;
+        public Track<float> SpeedKeys { get; } = Track<float>.Empty;
+        public Track<float> VisibilityKeys { get; } = Track<float>.Empty;
+        public Track<float> LifespanKeys { get; } = Track<float>.Empty;
+        public Track<float> AlphaKeys { get; } = Track<float>.Empty;
+        public Track<float> EmissionRateKeys { get; } = Track<float>.Empty;
+        public Track<CVector3> ColorKeys { get; } = Track<CVector3>.Empty;
 
         public ParticleEmitterPopcorn(BinaryReader br)
         {
-            long end = br.BaseStream.Position + (TotalSize = br.ReadUInt32());
+            long end = br.BaseStream.Position + br.ReadUInt32();
 
             ObjSize = br.ReadUInt32();
             Name = br.ReadCString(Constants.SizeName);
@@ -46,14 +43,12 @@ namespace MDXReForged.MDX
 
             LoadTracks(br);
 
-            Float1 = br.ReadSingle();
-            Float2 = br.ReadSingle();
-            Float3 = br.ReadSingle();
-            Float4 = br.ReadSingle();
-            Float5 = br.ReadSingle();
-            Float6 = br.ReadSingle();
-            Float7 = br.ReadSingle();
-            UInt1 = br.ReadUInt32(); // boolean?
+            LifeSpan = br.ReadSingle();
+            EmissionRate = br.ReadSingle();
+            Speed = br.ReadSingle();
+            Color = new CVector3(br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+            Alpha = br.ReadSingle();
+            ReplaceableId = br.ReadUInt32(); 
             FilePath = br.ReadCString(Constants.SizeFileName);
             AnimVisibilityGuide = br.ReadCString(Constants.SizeFileName);
 
