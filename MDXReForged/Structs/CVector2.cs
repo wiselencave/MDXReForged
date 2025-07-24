@@ -7,10 +7,6 @@ namespace MDXReForged.Structs
         public readonly float X;
         public readonly float Y;
 
-        public CVector2()
-        {
-        }
-
         public CVector2(BinaryReader br)
         {
             X = br.ReadSingle();

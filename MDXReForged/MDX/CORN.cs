@@ -46,7 +46,7 @@ namespace MDXReForged.MDX
             LifeSpan = br.ReadSingle();
             EmissionRate = br.ReadSingle();
             Speed = br.ReadSingle();
-            Color = new CVector3(br.ReadSingle(), br.ReadSingle(), br.ReadSingle());
+            Color = new CVector3(br);
             Alpha = br.ReadSingle();
             ReplaceableId = br.ReadUInt32(); 
             FilePath = br.ReadCString(Constants.SizeFileName);
