@@ -149,9 +149,7 @@ namespace MDXReForged.MDX
 
                 for (int i = 0; i < vertexCount; i++)
                 {
-                    byte[] indices = br.ReadBytes(4);
-                    byte[] weights = br.ReadBytes(4);
-                    skin.Add(new CSkinData(indices, weights));
+                    skin.Add(new CSkinData(br));
                 }
             }
 
@@ -191,18 +189,23 @@ namespace MDXReForged.MDX
             Extents = extents;
         }
 
+        public bool IsAllTriangles => FaceTypes.All(t => t == PRIMITIVE_TYPE.TYPE_TRIANGLES);
+
         /// <summary>
-        /// Enumerates all face groups in the mesh, returning their primitive type and corresponding index array.
+        /// Returns a flat index buffer, assuming the geoset contains only triangles.
         /// </summary>
-        /// <returns>
-        /// A sequence of tuples, where each tuple contains the <see cref="PRIMITIVE_TYPE"/> and a <see cref="ushort"/> array
-        /// of indices corresponding to that group.
-        /// </returns>
-        /// <remarks>
-        /// Uses <see cref="FaceTypes"/> and <see cref="FaceGroups"/> to split the flat index buffer <see cref="FaceIndices"/>
-        /// into logical primitive groups. Each entry in <c>FaceGroups</c> specifies the number of indices in the corresponding group.
-        /// </remarks>
-        public IEnumerable<(PRIMITIVE_TYPE Type, ushort[] Indices)> EnumerateGroups()
+        public ushort[] GetTriangleIndexBuffer()
+        {
+            if (!IsAllTriangles)
+                throw new InvalidOperationException("Geoset contains non-triangle primitives.");
+
+            return FaceIndices.ToArray();
+        }
+
+        /// <summary>
+        /// Enumerates face groups with their primitive type and corresponding indices.
+        /// </summary>
+        public IEnumerable<(PRIMITIVE_TYPE Type, ushort[] Indices)> EnumeratePrimitiveGroups()
         {
             if (FaceTypes.Count != FaceGroups.Count)
                 throw new InvalidOperationException("Mismatch between face type count and group size count.");
@@ -223,12 +226,11 @@ namespace MDXReForged.MDX
         }
 
         /// <summary>
-        /// Returns all triangles in the mesh, assuming only triangle primitives are present.
+        /// Enumerates triangles as (A, B, C) index triplets. Skips non-triangle groups.
         /// </summary>
-        /// <returns>List of triangles as arrays of 3 indices.</returns>
         public IEnumerable<(ushort A, ushort B, ushort C)> EnumerateTriangles()
         {
-            foreach (var (type, indices) in EnumerateGroups())
+            foreach (var (type, indices) in EnumeratePrimitiveGroups())
             {
                 if (type != PRIMITIVE_TYPE.TYPE_TRIANGLES || indices.Length % 3 != 0)
                     continue;

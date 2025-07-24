@@ -17,12 +17,12 @@ The project *should be* compliant with all of the models used in the current cli
 - Added support for `MDX1200`. Updated `LITE`.
 - Reworked `GEOS`:
   - Added enums for level of detail and primitive types (polygon section).
-  - Parser no longer reorders indices into triangles automatically. Raw index buffer is now preserved, with new helper methods `EnumerateGroups` and `EnumerateTriangles`.
+  - Parser no longer reorders indices into triangles automatically. Raw index buffer is now preserved, with new helper methods `EnumeratePrimitiveGroups`, `EnumerateTriangles` and `GetTriangleIndexBuffer`.
   - Vertex influences and weights merged into new `CSkinData` structure for skinning.
 - Updated property names for `CORN`.
 - Removed non-existent fields from `PRE2`.
 - Refactored the `C34Matrix` structure.
-- Removed unused structures and fields. `SNDS` parser was removed.
+- Removed unused structures and fields. `SNDS` was removed.
 
 ### Performance improvements:
 - Core math and geometry types rewritten as structs instead of classes.
