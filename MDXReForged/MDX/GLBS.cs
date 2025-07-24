@@ -6,7 +6,9 @@ namespace MDXReForged.MDX
     {
         public GLBS(BinaryReader br, uint version) : base(br, version)
         {
-            for (int i = 0; i < Size / 4; i++)
+            int count = (int)(Size / 4);
+            Values.Capacity = count;
+            for (int i = 0; i < count; i++)
                 Values.Add(br.ReadInt32());
         }
     }

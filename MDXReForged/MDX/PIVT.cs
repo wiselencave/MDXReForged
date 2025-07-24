@@ -7,7 +7,9 @@ namespace MDXReForged.MDX
     {
         public PIVT(BinaryReader br, uint version) : base(br, version)
         {
-            for (int i = 0; i < Size / 0xC; i++)
+            int count = (int)(Size / 0xC);
+            Values.Capacity = count;
+            for (int i = 0; i < count; i++)
                 Values.Add(new CVector3(br));
         }
     }

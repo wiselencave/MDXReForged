@@ -11,6 +11,7 @@ namespace MDXReForged.MDX
         public BPOS(BinaryReader br, uint version) : base(br, version)
         {
             int count = br.ReadInt32();
+            Values.Capacity = count;
             for (int i = 0; i < count; i++)
                 Values.Add(new C34Matrix(br));
         }

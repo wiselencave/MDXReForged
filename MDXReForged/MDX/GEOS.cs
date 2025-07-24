@@ -45,78 +45,85 @@ namespace MDXReForged.MDX
 
         public Geoset(BinaryReader br, uint version)
         {
-            var vertices = new List<CVector3>();
-            var normals = new List<CVector3>();
-            var tangents = new List<CVector4>();
+            CVector3[] vertices = [];
+            CVector3[] normals = [];
+            CVector4[] tangents = [];
 
-            var faceTypes = new List<PRIMITIVE_TYPE>();
-            var faceGroups = new List<uint>();
-            var faceIndices = new List<ushort>();
+            PRIMITIVE_TYPE[] faceTypes = [];
+            uint[] faceGroups = [];
+            ushort[] faceIndices = [];
 
-            var vertexGroups = new List<byte>();
-            var matrixGroups = new List<uint>();
-            var matrixIndexes = new List<uint>();
+            byte[] vertexGroups = [];
+            uint[] matrixGroups = [];
+            uint[] matrixIndexes = [];
 
-            var skin = new List<CSkinData>();
-            var texCoords = new List<IReadOnlyList<CVector2>>();
+            CSkinData[] skin = [];
+            List<IReadOnlyList<CVector2>> texCoords = new();
 
-            var extents = new List<CExtent>();
+            List<CExtent> extents = new();
 
             long totalSize = br.BaseStream.Position + br.ReadUInt32();
 
             if (br.HasTag("VRTX"))
             {
                 uint count = br.ReadUInt32();
+                vertices = new CVector3[count];
                 for (int i = 0; i < count; i++)
-                    vertices.Add(new CVector3(br));
+                    vertices[i] = new CVector3(br);
             }
 
             if (br.HasTag("NRMS"))
             {
                 uint count = br.ReadUInt32();
+                normals = new CVector3[count];
                 for (int i = 0; i < count; i++)
-                    normals.Add(new CVector3(br));
+                    normals[i] = new CVector3(br);
             }
 
             if (br.HasTag("PTYP"))
             {
                 uint count = br.ReadUInt32();
+                faceTypes = new PRIMITIVE_TYPE[count];
                 for (int i = 0; i < count; i++)
-                    faceTypes.Add((PRIMITIVE_TYPE)br.ReadUInt32());
+                    faceTypes[i] = (PRIMITIVE_TYPE)br.ReadUInt32();
             }
 
             if (br.HasTag("PCNT"))
             {
                 uint count = br.ReadUInt32();
+                faceGroups = new uint[count];
                 for (int i = 0; i < count; i++)
-                    faceGroups.Add(br.ReadUInt32());
+                    faceGroups[i] = br.ReadUInt32();
             }
 
             if (br.HasTag("PVTX"))
             {
                 uint count = br.ReadUInt32();
+                faceIndices = new ushort[count];
                 for (int i = 0; i < count; i++)
-                    faceIndices.Add(br.ReadUInt16());
+                    faceIndices[i] = br.ReadUInt16();
             }
 
             if (br.HasTag("GNDX"))
             {
                 uint count = br.ReadUInt32();
-                vertexGroups.AddRange(br.ReadBytes((int)count));
+                vertexGroups = br.ReadBytes((int)count);
             }
 
             if (br.HasTag("MTGC"))
             {
                 uint count = br.ReadUInt32();
+                matrixGroups = new uint[count];
                 for (int i = 0; i < count; i++)
-                    matrixGroups.Add(br.ReadUInt32());
+                    matrixGroups[i] = br.ReadUInt32();
             }
 
             if (br.HasTag("MATS"))
             {
                 uint count = br.ReadUInt32();
+                matrixIndexes = new uint[count];
                 for (int i = 0; i < count; i++)
-                    matrixIndexes.Add(br.ReadUInt32());
+                    matrixIndexes[i] = br.ReadUInt32();
             }
 
             MaterialId = br.ReadUInt32();
@@ -138,8 +145,9 @@ namespace MDXReForged.MDX
             if (br.HasTag("TANG"))
             {
                 uint count = br.ReadUInt32();
+                tangents = new CVector4[count];
                 for (int i = 0; i < count; i++)
-                    tangents.Add(new CVector4(br));
+                    tangents[i] = new CVector4(br);
             }
 
             if (br.HasTag("SKIN"))
@@ -147,10 +155,9 @@ namespace MDXReForged.MDX
                 uint skinSize = br.ReadUInt32();
                 int vertexCount = (int)(skinSize / 8);
 
+                skin = new CSkinData[vertexCount];
                 for (int i = 0; i < vertexCount; i++)
-                {
-                    skin.Add(new CSkinData(br));
-                }
+                    skin[i] = new CSkinData(br);
             }
 
             if (br.HasTag("UVAS"))
@@ -161,16 +168,14 @@ namespace MDXReForged.MDX
                     if (br.HasTag("UVBS"))
                     {
                         int uvCount = br.ReadInt32();
-                        var uvList = new List<CVector2>(uvCount);
-
+                        var uvArray = new CVector2[uvCount];
                         for (int j = 0; j < uvCount; j++)
-                            uvList.Add(new CVector2(br));
-
-                        texCoords.Add(uvList);
+                            uvArray[j] = new CVector2(br);
+                        texCoords.Add(uvArray);
                     }
                     else
                     {
-                        texCoords.Add(new List<CVector2>());
+                        texCoords.Add([]);
                     }
                 }
             }

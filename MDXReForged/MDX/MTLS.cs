@@ -64,7 +64,7 @@ namespace MDXReForged.MDX
 
         // If version >= 1100
         public LAYER_SHADER? ShaderId { get; }
-        public List<TextureEntry> Textures { get; } = new List<TextureEntry>();
+        public IReadOnlyList<TextureEntry> Textures { get; }
 
         public Layer(BinaryReader br, uint version)
         {
@@ -85,10 +85,12 @@ namespace MDXReForged.MDX
             }
 
             // Version 1100+: Shader + multiple textures with semantics
+            TextureEntry[] textures = [];
             if (version >= 1100)
             {
                 ShaderId = (LAYER_SHADER)br.ReadUInt32();
                 uint textureCount = br.ReadUInt32();
+                textures = new TextureEntry[textureCount];
 
                 for (uint i = 0; i < textureCount; i++)
                 {
@@ -108,9 +110,10 @@ namespace MDXReForged.MDX
                         br.BaseStream.Position -= 4;
                     }
 
-                    Textures.Add(tex);
+                    textures[i] = tex;
                 }
             }
+            Textures = textures;
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
