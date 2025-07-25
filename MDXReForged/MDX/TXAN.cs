@@ -29,9 +29,9 @@ namespace MDXReForged.MDX
                 uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case KTAT: TranslationKeys = new Track<CVector3>(br); break;
-                    case KTAR: RotationKeys = new Track<CVector4>(br); break;
-                    case KTAS: ScaleKeys = new Track<CVector3>(br); break;
+                    case KTAT: TranslationKeys = new Track<CVector3>(tagname, br); break;
+                    case KTAR: RotationKeys = new Track<CVector4>(tagname, br); break;
+                    case KTAS: ScaleKeys = new Track<CVector3>(tagname, br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

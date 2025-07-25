@@ -24,15 +24,15 @@ namespace MDXReForged.MDX
                 switch (tagname)
                 {
                     case KGTR:
-                        TranslationKeys = new Track<CVector3>(br);
+                        TranslationKeys = new Track<CVector3>(tagname, br);
                         break;
 
                     case KGRT:
-                        RotationKeys = new Track<CVector4>(br);
+                        RotationKeys = new Track<CVector4>(tagname, br);
                         break;
 
                     case KGSC:
-                        ScaleKeys = new Track<CVector3>(br);
+                        ScaleKeys = new Track<CVector3>(tagname, br);
                         break;
 
                     default:

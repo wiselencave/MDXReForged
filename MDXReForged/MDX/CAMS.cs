@@ -43,9 +43,9 @@ namespace MDXReForged.MDX
                 uint tag = br.ReadUInt32Tag();
                 switch (tag)
                 {
-                    case KCTR: TranslationKeys = new Track<CVector3>(br); break;
-                    case KTTR: TargetTranslationKeys = new Track<CVector3>(br); break;
-                    case KCRL: RotationKeys = new Track<float>(br); break;
+                    case KCTR: TranslationKeys = new Track<CVector3>(tag, br); break;
+                    case KTTR: TargetTranslationKeys = new Track<CVector3>(tag, br); break;
+                    case KCRL: RotationKeys = new Track<float>(tag, br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

@@ -39,7 +39,7 @@ namespace MDXReForged.MDX
                 uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case KATV: VisibilityKeys = new Track<float>(br); break;
+                    case KATV: VisibilityKeys = new Track<float>(tagname, br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

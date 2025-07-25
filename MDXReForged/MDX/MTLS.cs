@@ -104,7 +104,7 @@ namespace MDXReForged.MDX
                     uint maybeTag = br.ReadUInt32Tag();
                     if (maybeTag == KMTF)
                     {
-                        tex.FlipKeys = new Track<int>(br);
+                        tex.FlipKeys = new Track<int>(maybeTag, br);
                     }
                     else
                     {
@@ -121,16 +121,16 @@ namespace MDXReForged.MDX
                 uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case KMTA: AlphaKeys = new Track<float>(br); break;
-                    case KMTE: EmissiveGainKeys = new Track<float>(br); break; // >= 900
-                    case KFC3: FresnelColorKeys = new Track<CVector3>(br); break; // >= 1000
-                    case KFCA: FresnelOpacityKeys = new Track<float>(br); break;
-                    case KFTC: FresnelTeamColorKeys = new Track<float>(br); break;
+                    case KMTA: AlphaKeys = new Track<float>(tagname, br); break;
+                    case KMTE: EmissiveGainKeys = new Track<float>(tagname, br); break; // >= 900
+                    case KFC3: FresnelColorKeys = new Track<CVector3>(tagname, br); break; // >= 1000
+                    case KFCA: FresnelOpacityKeys = new Track<float>(tagname, br); break;
+                    case KFTC: FresnelTeamColorKeys = new Track<float>(tagname, br); break;
                     case KMTF:
                         if (version < 1100)
-                            FlipKeys = new Track<int>(br);
+                            FlipKeys = new Track<int>(tagname, br);
                         else if (Textures.Count > 0)
-                            Textures[0].FlipKeys = new Track<int>(br); // apply to diffuse
+                            Textures[0].FlipKeys = new Track<int>(tagname, br); // apply to diffuse
                         break;
                     default:
                         br.BaseStream.Position -= 4;

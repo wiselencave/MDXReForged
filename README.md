@@ -27,10 +27,11 @@ The project *should be* compliant with all of the models used in the current cli
 ### Performance improvements:
 - Core math and geometry types rewritten as structs instead of classes.
 - Replaced properties exposing `List<T>` with arrays where collection size is known in advance. For all chunk readers with a known object count, `List<T>` collections now preallocate capacity.
+- Optimized `Track<T>` loading.
 
 ### Null safety:
 - Added `GetItems<T>` for safe access to list-based chunks. If the chunk is missing, it returns an empty list. Added strongly-typed overloads (e.g., `GetBones()`, `GetTextures()`).
-- Animation tracks are now always initialized. Absent animations result in empty tracks instead of `null`.
+- Animation tracks and their nodes list are now always initialized. Absent animations result in empty tracks instead of `null`.
 - Certain newer-format properties are now `nullable`.
 - Reworked `CLID`:
   - Introduced `ICollisionGeometry` interface.
@@ -38,7 +39,7 @@ The project *should be* compliant with all of the models used in the current cli
 
 ### Architectural changes:
 - Public fields converted to `get`-only properties.
-- Tag comparisons now use centralized uint constants (Tags class) instead of string literals.
+- Tag comparisons now use centralized uint constants (`Tags` class) instead of string literals.
 - Project updated to `.NET 8.0`.
 
 ## Legacy

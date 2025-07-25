@@ -58,12 +58,12 @@ namespace MDXReForged.MDX
                 uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case KPPS: SpeedKeys = new Track<float>(br); break;
-                    case KPPV: VisibilityKeys = new Track<float>(br); break;
-                    case KPPL: LifespanKeys = new Track<float>(br); break;
-                    case KPPA: AlphaKeys = new Track<float>(br); break;
-                    case KPPE: EmissionRateKeys = new Track<float>(br); break;
-                    case KPPC: ColorKeys = new Track<CVector3>(br); break;
+                    case KPPS: SpeedKeys = new Track<float>(tagname, br); break;
+                    case KPPV: VisibilityKeys = new Track<float>(tagname, br); break;
+                    case KPPL: LifespanKeys = new Track<float>(tagname, br); break;
+                    case KPPA: AlphaKeys = new Track<float>(tagname, br); break;
+                    case KPPE: EmissionRateKeys = new Track<float>(tagname, br); break;
+                    case KPPC: ColorKeys = new Track<CVector3>(tagname, br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

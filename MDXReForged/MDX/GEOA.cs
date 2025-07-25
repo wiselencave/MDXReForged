@@ -38,8 +38,8 @@ namespace MDXReForged.MDX
                 uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case KGAO: AlphaKeys = new Track<float>(br); break;
-                    case KGAC: ColorKeys = new Track<CVector3>(br); break;
+                    case KGAO: AlphaKeys = new Track<float>(tagname, br); break;
+                    case KGAC: ColorKeys = new Track<CVector3>(tagname, br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

@@ -61,13 +61,13 @@ namespace MDXReForged.MDX
                 uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case KLAI: IntensityKeys = new Track<float>(br); break;
-                    case KLBI: AmbIntensityKeys = new Track<float>(br); break;
-                    case KLAV: VisibilityKeys = new Track<float>(br); break;
-                    case KLAC: ColorKeys = new Track<CVector3>(br); break;
-                    case KLBC: AmbColorKeys = new Track<CVector3>(br); break;
-                    case KLAS: AttenStartKeys = new Track<float>(br); break;
-                    case KLAE: AttenEndKeys = new Track<float>(br); break;
+                    case KLAI: IntensityKeys = new Track<float>(tagname, br); break;
+                    case KLBI: AmbIntensityKeys = new Track<float>(tagname, br); break;
+                    case KLAV: VisibilityKeys = new Track<float>(tagname, br); break;
+                    case KLAC: ColorKeys = new Track<CVector3>(tagname, br); break;
+                    case KLBC: AmbColorKeys = new Track<CVector3>(tagname, br); break;
+                    case KLAS: AttenStartKeys = new Track<float>(tagname, br); break;
+                    case KLAE: AttenEndKeys = new Track<float>(tagname, br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

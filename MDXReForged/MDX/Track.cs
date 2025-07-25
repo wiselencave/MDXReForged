@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using MDXReForged.Structs;
 
 namespace MDXReForged.MDX
 {
@@ -12,14 +13,37 @@ namespace MDXReForged.MDX
         public int GlobalSequenceId { get; private set; }
         public CAnimatorNode<T>[] Nodes { get; private set; }
 
-        private Track() { }
+        private static readonly Func<BinaryReader, T> Reader;
 
-        public Track(BinaryReader br) => Load(br);
-        public void Load(BinaryReader br)
+        static Track()
         {
-            br.BaseStream.Position -= 4;
+            if (typeof(T) == typeof(float))
+                Reader = br => (T)(object)br.ReadSingle();
+            else if (typeof(T) == typeof(int))
+                Reader = br => (T)(object)br.ReadInt32();
+            else
+            {
+                var ctor = typeof(T).GetConstructor(new[] { typeof(BinaryReader) });
+                if (ctor != null)
+                {
+                    Reader = br => (T)ctor.Invoke(new object[] { br });
+                }
+                else
+                {
+                    Reader = br => new T();
+                }
+            }
+        }
 
-            Name = br.ReadString(Constants.SizeTag);
+        private Track() 
+        {
+            Nodes = [];
+        }
+
+        public Track(uint tag, BinaryReader br) => Load(tag, br);
+        private void Load(uint tag, BinaryReader br)
+        {
+            Name = Extensions.TagToString(tag);
             NrOfTracks = br.ReadUInt32();
             InterpolationType = (MDLTRACKTYPE)br.ReadUInt32();
             GlobalSequenceId = br.ReadInt32();
@@ -28,14 +52,14 @@ namespace MDXReForged.MDX
             for (int i = 0; i < NrOfTracks; i++)
             {
                 uint Time = br.ReadUInt32();
-                T Value = CreateInstance(br);
+                T Value = ReadValue(br);
 
                 if (InterpolationType > MDLTRACKTYPE.TRACK_LINEAR)
                 {
-                    T InTangent = CreateInstance(br);
-                    T OutTrangent = CreateInstance(br);
+                    T InTangent = ReadValue(br);
+                    T OutTangent = ReadValue(br);
 
-                    Nodes[i] = new CAnimatorNode<T>(Time, Value, InTangent, OutTrangent);
+                    Nodes[i] = new CAnimatorNode<T>(Time, Value, InTangent, OutTangent);
                 }
                 else
                 {
@@ -44,42 +68,6 @@ namespace MDXReForged.MDX
             }
         }
         public bool IsEmpty => ReferenceEquals(this, Empty);
-
-        private T CreateInstance(BinaryReader br)
-        {
-            switch (typeof(T).Name)
-            {
-                case "Single":
-                    return (T)(object)br.ReadSingle();
-
-                case "Int32":
-                    return (T)(object)br.ReadInt32();
-
-                default:
-                    return (T)Activator.CreateInstance(typeof(T), br);
-            }
-        }
-    }
-
-    public class CAnimatorNode<T>
-    {
-        public uint Time { get; }
-        public T Value { get; }
-        public T InTangent { get; }
-        public T OutTangent { get; }
-
-        public CAnimatorNode(uint Time, T Value)
-        {
-            this.Time = Time;
-            this.Value = Value;
-        }
-
-        public CAnimatorNode(uint Time, T Value, T InTangent, T OutTangent)
-        {
-            this.Time = Time;
-            this.Value = Value;
-            this.InTangent = InTangent;
-            this.OutTangent = OutTangent;
-        }
+        private static T ReadValue(BinaryReader br) => Reader(br);
     }
 }
