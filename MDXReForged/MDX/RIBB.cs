@@ -1,5 +1,6 @@
 ﻿using MDXReForged.Structs;
 using System.IO;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -61,15 +62,15 @@ namespace MDXReForged.MDX
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
-                string tagname = br.ReadString(4);
+                uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case "KRHA": HeightAboveKeys = new Track<float>(br); break;
-                    case "KRHB": HeightBelowKeys = new Track<float>(br); break;
-                    case "KRAL": AlphaKeys = new Track<float>(br); break;
-                    case "KRVS": VisibilityKeys = new Track<float>(br); break;
-                    case "KRCO": ColorKeys = new Track<CVector3>(br); break;
-                    case "KRTX": TextureKeys = new Track<uint>(br); break;
+                    case KRHA: HeightAboveKeys = new Track<float>(br); break;
+                    case KRHB: HeightBelowKeys = new Track<float>(br); break;
+                    case KRAL: AlphaKeys = new Track<float>(br); break;
+                    case KRVS: VisibilityKeys = new Track<float>(br); break;
+                    case KRCO: ColorKeys = new Track<CVector3>(br); break;
+                    case KRTX: TextureKeys = new Track<uint>(br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

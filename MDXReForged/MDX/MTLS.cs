@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -32,7 +33,7 @@ namespace MDXReForged.MDX
             if (version >= 900 && version < 1100)
                 Shader = br.ReadCString(Constants.SizeName);
 
-            br.AssertTag("LAYS");   
+            br.AssertTag(Tags.LAYS);   
             NrOfLayers = br.ReadUInt32();
             for (int i = 0; i < NrOfLayers; i++)
                 Layers.Add(new Layer(br, version));
@@ -100,8 +101,8 @@ namespace MDXReForged.MDX
                         Semantic = (TEXTURE_SEMANTIC)br.ReadUInt32()
                     };
 
-                    string maybeTag = br.ReadCString(4);
-                    if (maybeTag == "KMTF")
+                    uint maybeTag = br.ReadUInt32Tag();
+                    if (maybeTag == KMTF)
                     {
                         tex.FlipKeys = new Track<int>(br);
                     }
@@ -117,15 +118,15 @@ namespace MDXReForged.MDX
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
-                string tagname = br.ReadCString(4);
+                uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case "KMTA": AlphaKeys = new Track<float>(br); break;
-                    case "KMTE": EmissiveGainKeys = new Track<float>(br); break; // >= 900
-                    case "KFC3": FresnelColorKeys = new Track<CVector3>(br); break; // >= 1000
-                    case "KFCA": FresnelOpacityKeys = new Track<float>(br); break; 
-                    case "KFTC": FresnelTeamColorKeys = new Track<float>(br); break;
-                    case "KMTF":
+                    case KMTA: AlphaKeys = new Track<float>(br); break;
+                    case KMTE: EmissiveGainKeys = new Track<float>(br); break; // >= 900
+                    case KFC3: FresnelColorKeys = new Track<CVector3>(br); break; // >= 1000
+                    case KFCA: FresnelOpacityKeys = new Track<float>(br); break;
+                    case KFTC: FresnelTeamColorKeys = new Track<float>(br); break;
+                    case KMTF:
                         if (version < 1100)
                             FlipKeys = new Track<int>(br);
                         else if (Textures.Count > 0)

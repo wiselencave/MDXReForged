@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -35,10 +36,10 @@ namespace MDXReForged.MDX
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
-                string tagname = br.ReadString(4);
+                uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case "KATV": VisibilityKeys = new Track<float>(br); break;
+                    case KATV: VisibilityKeys = new Track<float>(br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

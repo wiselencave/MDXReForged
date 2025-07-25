@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -26,7 +27,7 @@ namespace MDXReForged.MDX
 
             LoadTracks(br);
 
-            if (br.HasTag("KEVT"))
+            if (br.HasTag(KEVT))
                 EventKeys = new SimpleTrack(br, false);
         }
     }

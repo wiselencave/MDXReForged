@@ -38,6 +38,7 @@ The project *should be* compliant with all of the models used in the current cli
 
 ### Architectural changes:
 - Public fields converted to `get`-only properties.
+- Tag comparisons now use centralized uint constants (Tags class) instead of string literals.
 - Project updated to `.NET 8.0`.
 
 ## Legacy

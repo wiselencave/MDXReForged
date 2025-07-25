@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -52,16 +53,16 @@ namespace MDXReForged.MDX
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
-                string tagname = br.ReadString(4);
+                uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case "KPEE": EmissionKeys = new Track<float>(br); break;
-                    case "KPEG": GravityKeys = new Track<float>(br); break;
-                    case "KPLN": LongitudeKeys = new Track<float>(br); break;
-                    case "KPLT": LatitudeKeys = new Track<float>(br); break;
-                    case "KPEL": LifespanKeys = new Track<float>(br); break;
-                    case "KPES": SpeedKeys = new Track<float>(br); break;
-                    case "KPEV": VisibilityKeys = new Track<float>(br); break;
+                    case KPEE: EmissionKeys = new Track<float>(br); break;
+                    case KPEG: GravityKeys = new Track<float>(br); break;
+                    case KPLN: LongitudeKeys = new Track<float>(br); break;
+                    case KPLT: LatitudeKeys = new Track<float>(br); break;
+                    case KPEL: LifespanKeys = new Track<float>(br); break;
+                    case KPES: SpeedKeys = new Track<float>(br); break;
+                    case KPEV: VisibilityKeys = new Track<float>(br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

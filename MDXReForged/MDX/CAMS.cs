@@ -1,5 +1,6 @@
 ﻿using MDXReForged.Structs;
 using System.IO;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -39,12 +40,12 @@ namespace MDXReForged.MDX
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
-                string tag = br.ReadString(4);
+                uint tag = br.ReadUInt32Tag();
                 switch (tag)
                 {
-                    case "KCTR": TranslationKeys = new Track<CVector3>(br); break;
-                    case "KTTR": TargetTranslationKeys = new Track<CVector3>(br); break;
-                    case "KCRL": RotationKeys = new Track<float>(br); break;
+                    case KCTR: TranslationKeys = new Track<CVector3>(br); break;
+                    case KTTR: TargetTranslationKeys = new Track<CVector3>(br); break;
+                    case KCRL: RotationKeys = new Track<float>(br); break;
                     default:
                         br.BaseStream.Position -= 4;
                         return;

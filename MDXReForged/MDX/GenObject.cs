@@ -1,5 +1,6 @@
 ﻿using MDXReForged.Structs;
 using System.IO;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -19,18 +20,18 @@ namespace MDXReForged.MDX
         {
             while (!br.AtEnd())
             {
-                string tagname = br.ReadString(4);
+                uint tagname = br.ReadUInt32Tag();
                 switch (tagname)
                 {
-                    case "KGTR":
+                    case KGTR:
                         TranslationKeys = new Track<CVector3>(br);
                         break;
 
-                    case "KGRT":
+                    case KGRT:
                         RotationKeys = new Track<CVector4>(br);
                         break;
 
-                    case "KGSC":
+                    case KGSC:
                         ScaleKeys = new Track<CVector3>(br);
                         break;
 

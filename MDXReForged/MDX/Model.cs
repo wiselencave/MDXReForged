@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -181,7 +182,7 @@ namespace MDXReForged.MDX
             if (br.BaseStream.Length - br.BaseStream.Position <= 8)
                 return;
 
-            string tag = br.ReadString(4);
+            uint tag = br.ReadUInt32Tag();
             if (TypeLookup.TryGetValue(tag, out Type value))
             {
                 br.BaseStream.Position -= 4;
@@ -194,7 +195,7 @@ namespace MDXReForged.MDX
             }
             else
             {
-                throw new Exception($"Unknown type {tag}");
+                throw new Exception($"Unknown type {Extensions.TagToString(tag)}");
             }
         }
 
@@ -211,31 +212,31 @@ namespace MDXReForged.MDX
             Hierachy = hierachy;
         }
 
-        private static readonly Dictionary<string, Type> TypeLookup = new Dictionary<string, Type>
+        private static readonly Dictionary<uint, Type> TypeLookup = new Dictionary<uint, Type>
         {
-            { "VERS", typeof(VERS) },
-            { "MODL", typeof(MODL) },
-            { "SEQS", typeof(SEQS) },
-            { "MTLS", typeof(MTLS) },
-            { "TEXS", typeof(TEXS) },
-            { "GEOS", typeof(GEOS) },
-            { "BONE", typeof(BONE) },
-            { "HELP", typeof(HELP) },
-            { "ATCH", typeof(ATCH) },
-            { "PIVT", typeof(PIVT) },
-            { "CAMS", typeof(CAMS) },
-            { "EVTS", typeof(EVTS) },
-            { "CLID", typeof(CLID) },
-            { "GLBS", typeof(GLBS) },
-            { "GEOA", typeof(GEOA) },
-            { "PRE2", typeof(PRE2) },
-            { "RIBB", typeof(RIBB) },
-            { "LITE", typeof(LITE) },
-            { "TXAN", typeof(TXAN) },
-            { "BPOS", typeof(BPOS) },
-            { "FAFX", typeof(FAFX) },
-            { "PREM", typeof(PREM) },
-            { "CORN", typeof(CORN) },
+            { Tags.VERS, typeof(VERS) },
+            { Tags.MODL, typeof(MODL) },
+            { Tags.SEQS, typeof(SEQS) },
+            { Tags.MTLS, typeof(MTLS) },
+            { Tags.TEXS, typeof(TEXS) },
+            { Tags.GEOS, typeof(GEOS) },
+            { Tags.BONE, typeof(BONE) },
+            { Tags.HELP, typeof(HELP) },
+            { Tags.ATCH, typeof(ATCH) },
+            { Tags.PIVT, typeof(PIVT) },
+            { Tags.CAMS, typeof(CAMS) },
+            { Tags.EVTS, typeof(EVTS) },
+            { Tags.CLID, typeof(CLID) },
+            { Tags.GLBS, typeof(GLBS) },
+            { Tags.GEOA, typeof(GEOA) },
+            { Tags.PRE2, typeof(PRE2) },
+            { Tags.RIBB, typeof(RIBB) },
+            { Tags.LITE, typeof(LITE) },
+            { Tags.TXAN, typeof(TXAN) },
+            { Tags.BPOS, typeof(BPOS) },
+            { Tags.FAFX, typeof(FAFX) },
+            { Tags.PREM, typeof(PREM) },
+            { Tags.CORN, typeof(CORN) },
         };
     }
 }

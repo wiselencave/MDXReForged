@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
@@ -64,7 +65,7 @@ namespace MDXReForged.MDX
 
             long totalSize = br.BaseStream.Position + br.ReadUInt32();
 
-            if (br.HasTag("VRTX"))
+            if (br.HasTag(VRTX))
             {
                 uint count = br.ReadUInt32();
                 vertices = new CVector3[count];
@@ -72,7 +73,7 @@ namespace MDXReForged.MDX
                     vertices[i] = new CVector3(br);
             }
 
-            if (br.HasTag("NRMS"))
+            if (br.HasTag(NRMS))
             {
                 uint count = br.ReadUInt32();
                 normals = new CVector3[count];
@@ -80,7 +81,7 @@ namespace MDXReForged.MDX
                     normals[i] = new CVector3(br);
             }
 
-            if (br.HasTag("PTYP"))
+            if (br.HasTag(PTYP))
             {
                 uint count = br.ReadUInt32();
                 faceTypes = new PRIMITIVE_TYPE[count];
@@ -88,7 +89,7 @@ namespace MDXReForged.MDX
                     faceTypes[i] = (PRIMITIVE_TYPE)br.ReadUInt32();
             }
 
-            if (br.HasTag("PCNT"))
+            if (br.HasTag(PCNT))
             {
                 uint count = br.ReadUInt32();
                 faceGroups = new uint[count];
@@ -96,7 +97,7 @@ namespace MDXReForged.MDX
                     faceGroups[i] = br.ReadUInt32();
             }
 
-            if (br.HasTag("PVTX"))
+            if (br.HasTag(PVTX))
             {
                 uint count = br.ReadUInt32();
                 faceIndices = new ushort[count];
@@ -104,13 +105,13 @@ namespace MDXReForged.MDX
                     faceIndices[i] = br.ReadUInt16();
             }
 
-            if (br.HasTag("GNDX"))
+            if (br.HasTag(GNDX))
             {
                 uint count = br.ReadUInt32();
                 vertexGroups = br.ReadBytes((int)count);
             }
 
-            if (br.HasTag("MTGC"))
+            if (br.HasTag(MTGC))
             {
                 uint count = br.ReadUInt32();
                 matrixGroups = new uint[count];
@@ -118,7 +119,7 @@ namespace MDXReForged.MDX
                     matrixGroups[i] = br.ReadUInt32();
             }
 
-            if (br.HasTag("MATS"))
+            if (br.HasTag(MATS))
             {
                 uint count = br.ReadUInt32();
                 matrixIndexes = new uint[count];
@@ -142,7 +143,7 @@ namespace MDXReForged.MDX
             for (int i = 0; i < nrOfExtents; i++)
                 extents.Add(new CExtent(br));
 
-            if (br.HasTag("TANG"))
+            if (br.HasTag(TANG))
             {
                 uint count = br.ReadUInt32();
                 tangents = new CVector4[count];
@@ -150,7 +151,7 @@ namespace MDXReForged.MDX
                     tangents[i] = new CVector4(br);
             }
 
-            if (br.HasTag("SKIN"))
+            if (br.HasTag(SKIN))
             {
                 uint skinSize = br.ReadUInt32();
                 int vertexCount = (int)(skinSize / 8);
@@ -160,12 +161,12 @@ namespace MDXReForged.MDX
                     skin[i] = new CSkinData(br);
             }
 
-            if (br.HasTag("UVAS"))
+            if (br.HasTag(UVAS))
             {
                 uint texSetCount = br.ReadUInt32();
                 for (int i = 0; i < texSetCount; i++)
                 {
-                    if (br.HasTag("UVBS"))
+                    if (br.HasTag(UVBS))
                     {
                         int uvCount = br.ReadInt32();
                         var uvArray = new CVector2[uvCount];
