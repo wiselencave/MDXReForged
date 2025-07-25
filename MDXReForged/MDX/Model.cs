@@ -43,13 +43,6 @@ namespace MDXReForged.MDX
         /// Retrieves the first chunk of the specified type from the model.
         /// </summary>
         /// <typeparam name="T">The chunk type to retrieve. Must inherit from <see cref="BaseChunk"/>.</typeparam>
-        /// <returns>
-        /// The first instance of the chunk type <typeparamref name="T"/> if found; otherwise, <c>null</c>.
-        /// </returns>
-        /// <remarks>
-        /// This method is intended for optional chunks. If the chunk is required for further logic,
-        /// ensure null-checking or use <see cref="GetItems{TChunk, TItem}"/> if applicable.
-        /// </remarks>
         public T Get<T>() where T : BaseChunk => (T)Chunks.FirstOrDefault(x => x is T);
 
         public VERS GetVersionChunk() => Get<VERS>();
@@ -183,10 +176,10 @@ namespace MDXReForged.MDX
                 return;
 
             uint tag = br.ReadUInt32Tag();
-            if (TypeLookup.TryGetValue(tag, out Type value))
+            if (ChunkFactories.TryGetValue(tag, out var factory))
             {
                 br.BaseStream.Position -= 4;
-                var chunk = (BaseChunk)Activator.CreateInstance(value, br, Version);
+                var chunk = factory(br, Version);
 
                 if (Version == 0 && chunk is VERS vers)
                     Version = vers.FormatVersion;
@@ -212,31 +205,31 @@ namespace MDXReForged.MDX
             Hierachy = hierachy;
         }
 
-        private static readonly Dictionary<uint, Type> TypeLookup = new Dictionary<uint, Type>
+        private static readonly Dictionary<uint, Func<BinaryReader, uint, BaseChunk>> ChunkFactories = new Dictionary<uint, Func<BinaryReader, uint, BaseChunk>>
         {
-            { Tags.VERS, typeof(VERS) },
-            { Tags.MODL, typeof(MODL) },
-            { Tags.SEQS, typeof(SEQS) },
-            { Tags.MTLS, typeof(MTLS) },
-            { Tags.TEXS, typeof(TEXS) },
-            { Tags.GEOS, typeof(GEOS) },
-            { Tags.BONE, typeof(BONE) },
-            { Tags.HELP, typeof(HELP) },
-            { Tags.ATCH, typeof(ATCH) },
-            { Tags.PIVT, typeof(PIVT) },
-            { Tags.CAMS, typeof(CAMS) },
-            { Tags.EVTS, typeof(EVTS) },
-            { Tags.CLID, typeof(CLID) },
-            { Tags.GLBS, typeof(GLBS) },
-            { Tags.GEOA, typeof(GEOA) },
-            { Tags.PRE2, typeof(PRE2) },
-            { Tags.RIBB, typeof(RIBB) },
-            { Tags.LITE, typeof(LITE) },
-            { Tags.TXAN, typeof(TXAN) },
-            { Tags.BPOS, typeof(BPOS) },
-            { Tags.FAFX, typeof(FAFX) },
-            { Tags.PREM, typeof(PREM) },
-            { Tags.CORN, typeof(CORN) },
+            { Tags.VERS, (br, version) => new VERS(br, version) },
+            { Tags.MODL, (br, version) => new MODL(br, version) },
+            { Tags.SEQS, (br, version) => new SEQS(br, version) },
+            { Tags.MTLS, (br, version) => new MTLS(br, version) },
+            { Tags.TEXS, (br, version) => new TEXS(br, version) },
+            { Tags.GEOS, (br, version) => new GEOS(br, version) },
+            { Tags.BONE, (br, version) => new BONE(br, version) },
+            { Tags.HELP, (br, version) => new HELP(br, version) },
+            { Tags.ATCH, (br, version) => new ATCH(br, version) },
+            { Tags.PIVT, (br, version) => new PIVT(br, version) },
+            { Tags.CAMS, (br, version) => new CAMS(br, version) },
+            { Tags.EVTS, (br, version) => new EVTS(br, version) },
+            { Tags.CLID, (br, version) => new CLID(br, version) },
+            { Tags.GLBS, (br, version) => new GLBS(br, version) },
+            { Tags.GEOA, (br, version) => new GEOA(br, version) },
+            { Tags.PRE2, (br, version) => new PRE2(br, version) },
+            { Tags.RIBB, (br, version) => new RIBB(br, version) },
+            { Tags.LITE, (br, version) => new LITE(br, version) },
+            { Tags.TXAN, (br, version) => new TXAN(br, version) },
+            { Tags.BPOS, (br, version) => new BPOS(br, version) },
+            { Tags.FAFX, (br, version) => new FAFX(br, version) },
+            { Tags.PREM, (br, version) => new PREM(br, version) },
+            { Tags.CORN, (br, version) => new CORN(br, version) },
         };
     }
 }

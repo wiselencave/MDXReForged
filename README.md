@@ -27,7 +27,7 @@ The project *should be* compliant with all of the models used in the current cli
 ### Performance improvements:
 - Core math and geometry types rewritten as structs instead of classes.
 - Replaced properties exposing `List<T>` with arrays where collection size is known in advance. For all chunk readers with a known object count, `List<T>` collections now preallocate capacity.
-- Optimized `Track<T>` loading.
+- Optimized `Track<T>` loading. `Model` refactored.
 
 ### Null safety:
 - Added `GetItems<T>` for safe access to list-based chunks. If the chunk is missing, it returns an empty list. Added strongly-typed overloads (e.g., `GetBones()`, `GetTextures()`).
