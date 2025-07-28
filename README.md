@@ -1,8 +1,9 @@
 # MDX ReForged
 
-Experiments with reading the new Warcraft 3: Reforged MDX files. 
+A cleaned-up, extended parser for Warcraft 3: Reforged `.mdx` model files.
 
-The project *should be* compliant with all of the models used in the current client (as of time of writing).
+This project is a fork of [barncastle/MDXReForged](https://github.com/barncastle/MDXReForged), originally started in 2019 as an experimental reader.  
+Support has been expanded to cover MDX1000–MDX1200 formats, with architectural refactoring, improved null safety, and moderate performance improvements.
 
 ## Usage
 
@@ -12,11 +13,14 @@ var model = new MDXReForged.MDX.Model("path/to/model.mdx");
 
 // Load from an existing stream
 using var stream = File.OpenRead("path/to/model.mdx");
-var modelFromStream = new MDXReForged.MDX.Model(stream);
+var fromStream = new MDXReForged.MDX.Model(stream);
 
 // Or pass a BinaryReader directly
 using var reader = new BinaryReader(File.OpenRead("path/to/model.mdx"));
-var modelFromReader = new MDXReForged.MDX.Model(reader);
+var fromReader = new MDXReForged.MDX.Model(reader);
+
+// Print model summary (debug info)
+Console.WriteLine(model.GetDetailedInfo());
 ```
 
 ## 2025 – Major Changes
@@ -27,14 +31,13 @@ var modelFromReader = new MDXReForged.MDX.Model(reader);
     - Added support for multi-texturing.
     - Introduced new `TextureEntry` class that holds the texture ID, semantic, and optional flip track.
     - Layers now can expose a `Textures` list instead of a single `TextureId`.
-
 - Added support for `MDX1200`. Updated `LITE`.
 - Reworked `GEOS`:
   - Added enums for level of detail and primitive types.
   - Parser no longer reorders indices into triangles automatically. Raw index buffer is now preserved.
   - Vertex influences and weights merged into new `CSkinData` structure for skinning.
 - Updated property names for `CORN`.
-- Removed non-existent fields from `PRE2`.
+- Removed unused placeholder fields from `PRE2`.
 - Refactored the `C34Matrix` structure.
 - Removed unused structures and fields. `SNDS` was removed.
 
@@ -62,25 +65,3 @@ var modelFromReader = new MDXReForged.MDX.Model(reader);
 - Added strongly-typed accessors for common chunks (e.g., `GetBones()`, `GetTextures()`), as convenience wrappers over `GetItems<T>()`.
 - Added helper methods to `Geoset` for accessing geometry indices: `EnumeratePrimitiveGroups`, `EnumerateTriangles` and `GetTriangleIndexBuffer`.
 - Added `GetTextureId(semantic)` method to `Layer` for easy texture lookup by purpose (e.g., diffuse, normal, emissive).
-
-## Legacy
-
-#### Notable changes:
-
-Changes appear to have been made as per below. Most of which are wrapped in a version check by the client as to preserve backwards compatibility.
-
-**New BPOS Chunk** - Bind Positions
-
-**New FAFX Chunk** - FaceFX, used for the new facial animations, see vendor docs
-
-**New CORN Chunk** - PopcornFX particle emitter, see vendor docs
-
-**Changed GEOS Chunk** - Now contains a `LevelOfDetail` and a `FilePath/GeosetName` field
-
-- **New TANG Sub-Chunk** - Tangents. These are C4Vectors with `w` storing the handedness (see Unity's docs)
-
-- **New SKIN Sub-Chunk** - Contains bone indices and weights
-
-**Changed MTLS Chunk** - Now contains a `Shader` file path field
-
-- **Changed LAYS Sub-Chunk** - Contains a new float and float track, presumed to be `EmissiveGain`
