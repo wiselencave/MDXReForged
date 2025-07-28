@@ -15,5 +15,7 @@ namespace MDXReForged.Structs
             Height = br.ReadSingle();
             Radius = br.ReadSingle();
         }
+
+        public override string ToString() => $"Cylinder — Base: {Base}, Height: {Height:0.000}, Radius: {Radius:0.000}";
     }
 }

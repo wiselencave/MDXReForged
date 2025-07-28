@@ -14,5 +14,6 @@ namespace MDXReForged.Structs
             Length = br.ReadSingle();
             Width = br.ReadSingle();
         }
+        public override string ToString() => $"Plane — Length: {Length:0.000}, Width: {Width:0.000}";
     }
 }

@@ -74,5 +74,6 @@ namespace MDXReForged.MDX
                 }
             }
         }
+        public override string ToString() => $"Light \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId}) — Type: {Type}";
     }
 }

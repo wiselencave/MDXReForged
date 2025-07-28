@@ -69,5 +69,15 @@ namespace MDXReForged.MDX
         }
         public bool IsEmpty => ReferenceEquals(this, Empty);
         private static T ReadValue(BinaryReader br) => Reader(br);
+
+        public override string ToString()
+        {
+            if (IsEmpty)
+                return $"Track<{typeof(T).Name}> (empty)";
+
+            return $"Track \"{Name}\" ({typeof(T).Name}) — {Nodes.Length} key(s), Interpolation: {InterpolationType}" +
+                   (GlobalSequenceId >= 0 ? $", GlobalSeqId: {GlobalSequenceId}" : "");
+        }
+
     }
 }

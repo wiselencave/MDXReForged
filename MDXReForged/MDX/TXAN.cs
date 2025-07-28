@@ -38,5 +38,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
+        public override string ToString() => 
+            $"Texture Animation — Translation Track: {TranslationKeys},\r\n\t Rotation Track: {RotationKeys}, \r\n\t Scaling Track: {ScaleKeys}";
     }
 }

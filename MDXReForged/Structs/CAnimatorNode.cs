@@ -20,5 +20,8 @@
             InTangent = inTangent;
             OutTangent = outTangent;
         }
+
+        public override string ToString() =>
+            $"[{Time}]: {Value} (In: {InTangent}, Out: {OutTangent})";
     }
 }

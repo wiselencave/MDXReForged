@@ -12,8 +12,12 @@ namespace MDXReForged.MDX
         public GEOS(BinaryReader br, uint version) : base(br, version)
         {
             long end = br.BaseStream.Position + Size;
+            uint id = 0;
             while (br.BaseStream.Position < end)
-                Values.Add(new Geoset(br, version));
+            {
+                Values.Add(new Geoset(br, id, version));
+                id++;
+            }
         }
     }
 
@@ -41,10 +45,11 @@ namespace MDXReForged.MDX
         public bool Unselectable { get; }
         public LEVEL_OF_DETAIL Level { get; }
         public string Name { get; }
+        public uint GeosetId { get; }
 
         public IReadOnlyList<CExtent> Extents { get; }
 
-        public Geoset(BinaryReader br, uint version)
+        public Geoset(BinaryReader br, uint id, uint version)
         {
             CVector3[] vertices = [];
             CVector3[] normals = [];
@@ -193,6 +198,7 @@ namespace MDXReForged.MDX
             Skin = skin;
             TexCoords = texCoords;
             Extents = extents;
+            GeosetId = id;
         }
 
         public bool IsAllTriangles => FaceTypes.All(t => t == PRIMITIVE_TYPE.TYPE_TRIANGLES);
@@ -245,5 +251,7 @@ namespace MDXReForged.MDX
                     yield return (indices[i], indices[i + 1], indices[i + 2]);
             }
         }
+        public override string ToString() =>
+           $"Geoset \"{Name}\" (ID: {GeosetId}, {Level}) — Vertices: {Vertices.Count}, Indices: {FaceIndices.Count}";
     }
 }

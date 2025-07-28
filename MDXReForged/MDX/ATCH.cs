@@ -46,5 +46,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
+
+        public override string ToString() => $"Attachment \"{Name}\" (AttId: {AttachmentId}, ObjectId: {ObjectId}) — Path: \"{Path}\"";
     }
 }

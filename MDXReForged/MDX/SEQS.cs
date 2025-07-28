@@ -20,7 +20,7 @@ namespace MDXReForged.MDX
         public int MaxTime { get; }
         public float MoveSpeed { get; }
         public bool NonLooping { get; }
-        public float Frequency { get; }
+        public float Rarity { get; }
         public uint SyncPoint { get; }
         public CExtent Bounds { get; }
 
@@ -32,9 +32,12 @@ namespace MDXReForged.MDX
             MoveSpeed = br.ReadSingle();
 
             NonLooping = br.ReadInt32() == 1;
-            Frequency = br.ReadSingle();
+            Rarity = br.ReadSingle();
             SyncPoint = br.ReadUInt32();
             Bounds = new CExtent(br);
         }
+        public override string ToString() =>
+            $"Sequence \"{Name}\" [{MinTime}–{MaxTime}] — MoveSpeed: {MoveSpeed:0.000}, NonLooping: {NonLooping}, Rarity: {Rarity}, Sync: {SyncPoint}";
+
     }
 }

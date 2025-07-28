@@ -30,5 +30,8 @@ namespace MDXReForged.MDX
             GeosetId = br.ReadInt32();
             GeosetAnimId = br.ReadInt32();
         }
+
+        public override string ToString() =>
+            $"Bone \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId}) — GeosetId: {GeosetId}, GeosetAnimId: {GeosetAnimId}";
     }
 }

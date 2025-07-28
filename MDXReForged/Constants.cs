@@ -28,16 +28,16 @@ namespace MDXReForged
         NUM_SHAPES = 0x4,
     }
 
-    public enum MDLTEXOP
+    public enum LAYER_FILTER_MODE
     {
-        TEXOP_LOAD = 0x0,
-        TEXOP_TRANSPARENT = 0x1,
-        TEXOP_BLEND = 0x2,
-        TEXOP_ADD = 0x3,
-        TEXOP_ADD_ALPHA = 0x4,
-        TEXOP_MODULATE = 0x5,
-        TEXOP_MODULATE2X = 0x6,
-        NUMTEXOPS = 0x7,
+        FILTER_NONE = 0x0,
+        FILTER_TRANSPARENT = 0x1,
+        FILTER_BLEND = 0x2,
+        FILTER_ADD = 0x3,
+        FILTER_ADD_ALPHA = 0x4,
+        FILTER_MODULATE = 0x5,
+        FILTER_MODULATE2X = 0x6,
+        NUM_FILTER = 0x7,
     }
 
     [Flags]

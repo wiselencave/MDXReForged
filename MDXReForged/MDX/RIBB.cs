@@ -77,5 +77,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
+        public override string ToString() =>
+            $"Ribbon Emitter \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId})";
     }
 }

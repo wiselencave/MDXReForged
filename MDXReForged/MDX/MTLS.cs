@@ -38,11 +38,16 @@ namespace MDXReForged.MDX
             for (int i = 0; i < NrOfLayers; i++)
                 Layers.Add(new Layer(br, version));
         }
+        public override string ToString()
+        {
+            string shaderInfo = string.IsNullOrEmpty(Shader) ? "" : $"Shader: \"{Shader}\", ";
+            return $"Material — {shaderInfo}Layers: {Layers.Count}";
+        }
     }
 
     public class Layer
     {
-        public MDLTEXOP BlendMode { get; }
+        public LAYER_FILTER_MODE BlendMode { get; }
         public MDLGEO Flags { get; }
         public uint TextureId { get; }
         public int TextureAnimationId { get; }
@@ -70,7 +75,7 @@ namespace MDXReForged.MDX
         public Layer(BinaryReader br, uint version)
         {
             long end = br.BaseStream.Position + br.ReadUInt32();
-            BlendMode = (MDLTEXOP)br.ReadInt32();
+            BlendMode = (LAYER_FILTER_MODE)br.ReadInt32();
             Flags = (MDLGEO)br.ReadUInt32();
             TextureId = br.ReadUInt32();
             TextureAnimationId = br.ReadInt32();
@@ -142,6 +147,12 @@ namespace MDXReForged.MDX
         {
             return Textures.FirstOrDefault(t => t.Semantic == semantic)?.TextureId;
         }
+
+        public override string ToString()
+        {
+            string shaderInfo = ShaderId.HasValue ? $", ShaderId: {ShaderId}" : "";
+            return $"Layer — Blend: {BlendMode}, ShaderId: {ShaderId}";
+        }
     }
 
     public class TextureEntry
@@ -149,5 +160,10 @@ namespace MDXReForged.MDX
         public uint TextureId { get; internal set; }
         public TEXTURE_SEMANTIC Semantic { get; internal set; }
         public Track<int> FlipKeys { get; internal set; } = Track<int>.Empty;
+        public override string ToString()
+        {
+            string flip = FlipKeys.IsEmpty ? "" : $"\r\n\t Flip Track: {FlipKeys}";
+            return $"TextureId: {TextureId} ({Semantic}) — {flip}";
+        }
     }
 }

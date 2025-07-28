@@ -1,5 +1,7 @@
 ﻿using MDXReForged.Structs;
+using System;
 using System.IO;
+using System.Linq;
 using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
@@ -41,5 +43,19 @@ namespace MDXReForged.MDX
                 }
             }
         }
+
+        public virtual string GetFormattedFlags()
+        {
+            if (Flags == 0)
+                return "None";
+
+            return string.Join(" | ",
+                Enum.GetValues(typeof(GENOBJECTFLAGS))
+                    .Cast<GENOBJECTFLAGS>()
+                    .Where(flag => Flags.HasFlag(flag) && flag != 0));
+        }
+
+        public override string ToString() =>
+            $"Bone \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId}) — Flags: {GetFormattedFlags()}";
     }
 }

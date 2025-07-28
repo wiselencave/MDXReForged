@@ -70,5 +70,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
+        public override string ToString() =>
+            $"PopcornFX \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId}) — FilePath: \"{FilePath}\"";
     }
 }

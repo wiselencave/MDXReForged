@@ -142,5 +142,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
+        public override string ToString() =>
+            $"Particle Emitter 2 \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId})";
     }
 }

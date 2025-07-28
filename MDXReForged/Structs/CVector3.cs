@@ -19,8 +19,7 @@ namespace MDXReForged.Structs
 
         public static bool operator !=(CVector3 left, CVector3 right) => !left.Equals(right);
 
-        public override string ToString() => $"X: {X}, Y: {Y}, Z: {Z}";
-
+        public override string ToString() => $"({X:0.000}, {Y:0.000}, {Z:0.000})";
         public override int GetHashCode()
         {
             int hash = X.GetHashCode();

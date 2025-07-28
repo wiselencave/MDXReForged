@@ -3,16 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
     public class Model
     {
-        public readonly string BaseFile;
-        public readonly string Magic;
-        public IReadOnlyList<BaseChunk> Chunks;
-        public IReadOnlyList<GenObject> Hierachy;
+        public string BaseFile { get; }
+        public string Magic { get; private set; }
+        public IReadOnlyList<BaseChunk> Chunks { get; private set; }
+        public IReadOnlyList<GenObject> Hierarchy { get; private set; }
 
         public string Name => Get<MODL>().Name;
         public string AnimationFile => Get<MODL>().AnimationFile;
@@ -23,18 +24,33 @@ namespace MDXReForged.MDX
         public Model(string file)
         {
             BaseFile = file;
+            using var fs = new FileInfo(file).OpenRead();
+            using var br = new BinaryReader(fs);
+            Initialize(br);
+        }
 
+        public Model(Stream stream)
+        {
+            BaseFile = (stream as FileStream)?.Name;
+            using var br = new BinaryReader(stream, System.Text.Encoding.UTF8, leaveOpen: true);
+            Initialize(br);
+        }
+
+        public Model(BinaryReader reader)
+        {
+            BaseFile = (reader.BaseStream as FileStream)?.Name;
+            Initialize(reader);
+        }
+
+        private void Initialize(BinaryReader br)
+        {
             var chunks = new List<BaseChunk>();
-            using (var fs = new FileInfo(file).OpenRead())
-            using (var br = new BinaryReader(fs))
-            {
-                Magic = br.ReadString(4);
-                while (!br.AtEnd())
-                    ReadChunk(br, chunks);
-            }
+            Magic = br.ReadString(4);
+            while (!br.AtEnd())
+                ReadChunk(br, chunks);
 
             Chunks = chunks;
-            PopulateHierachy();
+            PopulateHierarchy();
         }
 
         public bool Has<T>() where T : BaseChunk => Chunks.Any(x => x is T);
@@ -168,7 +184,6 @@ namespace MDXReForged.MDX
         /// </summary>
         public IReadOnlyList<ParticleEmitterPopcorn> GetCornEmitters() => GetItems<CORN, ParticleEmitterPopcorn>();
 
-
         private void ReadChunk(BinaryReader br, List<BaseChunk> chunks)
         {
             // no point parsing last 8 bytes as it's either padding or an empty chunk
@@ -192,7 +207,7 @@ namespace MDXReForged.MDX
             }
         }
 
-        private void PopulateHierachy()
+        private void PopulateHierarchy()
         {
             var hierachy = new List<GenObject>();
 
@@ -202,7 +217,7 @@ namespace MDXReForged.MDX
                     hierachy.AddRange(collection);
 
             hierachy.Sort((x, y) => x.ObjectId.CompareTo(y.ObjectId));
-            Hierachy = hierachy;
+            Hierarchy = hierachy;
         }
 
         private static readonly Dictionary<uint, Func<BinaryReader, uint, BaseChunk>> ChunkFactories = new Dictionary<uint, Func<BinaryReader, uint, BaseChunk>>
@@ -231,5 +246,45 @@ namespace MDXReForged.MDX
             { Tags.PREM, (br, version) => new PREM(br, version) },
             { Tags.CORN, (br, version) => new CORN(br, version) },
         };
+
+        /// <summary>
+        /// Returns a multiline string containing detailed information about the model.
+        /// </summary>
+        public string GetDetailedInfo()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(ToString());
+
+            void Append<TChunk, TItem>(string label) where TChunk : EnumerableBaseChunk<TItem>
+            {
+                sb.AppendLine($"\t{label}: {GetItems<TChunk, TItem>().Count}");
+            }
+
+            Append<SEQS, Sequence>("Sequences");
+            Append<MTLS, Material>("Materials");
+            Append<TEXS, Texture>("Textures");
+            Append<GEOS, Geoset>("Geosets");
+            Append<GEOA, GeosetAnimation>("GeosetAnimations");
+            Append<BONE, Bone>("Bones");
+            Append<HELP, Helper>("Helpers");
+            Append<ATCH, Attachment>("Attachments");
+            Append<PIVT, CVector3>("Pivots");
+            Append<CAMS, Camera>("Cameras");
+            Append<EVTS, Event>("Events");
+            Append<CLID, CollisionShape>("CollisionShapes");
+            Append<GLBS, int>("GlobalSequences");
+            Append<PRE2, ParticleEmitter2>("ParticleEmitters2");
+            Append<PREM, ParticleEmitter>("ParticleEmitters");
+            Append<CORN, ParticleEmitterPopcorn>("PopcornEmitters");
+            Append<RIBB, RibbonEmitter>("RibbonEmitters");
+            Append<LITE, Light>("Lights");
+            Append<TXAN, TextureAnimation>("TextureAnimations");
+            Append<BPOS, C34Matrix>("BindPoses");
+            Append<FAFX, FaceFX>("FaceFXNodes");
+
+            return sb.ToString();
+        }
+
+        public override string ToString() => $"Model \"{Name}\" (Version: MDX{Version})";
     }
 }

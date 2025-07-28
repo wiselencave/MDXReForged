@@ -17,6 +17,6 @@ namespace MDXReForged.Structs
             W = br.ReadSingle();
         }
 
-        public override string ToString() => $"X: {X}, Y: {Y}, Z: {Z}, W: {W}";
+        public override string ToString() => $"({X:0.000}, {Y:0.000}, {Z:0.000}, {W:0.000})";
     }
 }

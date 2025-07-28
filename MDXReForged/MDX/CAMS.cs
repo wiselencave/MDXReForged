@@ -52,5 +52,9 @@ namespace MDXReForged.MDX
                 }
             }
         }
+
+        public override string ToString() =>
+            $"Camera \"{Name}\" — Position: {Pivot}, Target: {TargetPosition}, FoV: {FieldOfView:0.00}, Near/Far: {NearClip}/{FarClip}";
+
     }
 }

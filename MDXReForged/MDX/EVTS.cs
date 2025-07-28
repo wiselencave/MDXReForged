@@ -30,5 +30,7 @@ namespace MDXReForged.MDX
             if (br.HasTag(KEVT))
                 EventKeys = new SimpleTrack(br, false);
         }
+
+        public override string ToString() => $"Event \"{Name}\" (ObjectId: {ObjectId}, ParentId: {ParentId})";
     }
 }

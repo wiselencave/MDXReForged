@@ -4,6 +4,21 @@ Experiments with reading the new Warcraft 3: Reforged MDX files.
 
 The project *should be* compliant with all of the models used in the current client (as of time of writing).
 
+## Usage
+
+```csharp
+// Load from a file path
+var model = new MDXReForged.MDX.Model("path/to/model.mdx");
+
+// Load from an existing stream
+using var stream = File.OpenRead("path/to/model.mdx");
+var modelFromStream = new MDXReForged.MDX.Model(stream);
+
+// Or pass a BinaryReader directly
+using var reader = new BinaryReader(File.OpenRead("path/to/model.mdx"));
+var modelFromReader = new MDXReForged.MDX.Model(reader);
+```
+
 ## 2025 – Major Changes
 
 ### Format updates:
@@ -12,12 +27,11 @@ The project *should be* compliant with all of the models used in the current cli
     - Added support for multi-texturing.
     - Introduced new `TextureEntry` class that holds the texture ID, semantic, and optional flip track.
     - Layers now can expose a `Textures` list instead of a single `TextureId`.
-    - Added `GetTextureId(semantic)` method for easy texture lookup by purpose (e.g., diffuse, normal, emissive).
 
 - Added support for `MDX1200`. Updated `LITE`.
 - Reworked `GEOS`:
-  - Added enums for level of detail and primitive types (polygon section).
-  - Parser no longer reorders indices into triangles automatically. Raw index buffer is now preserved, with new helper methods `EnumeratePrimitiveGroups`, `EnumerateTriangles` and `GetTriangleIndexBuffer`.
+  - Added enums for level of detail and primitive types.
+  - Parser no longer reorders indices into triangles automatically. Raw index buffer is now preserved.
   - Vertex influences and weights merged into new `CSkinData` structure for skinning.
 - Updated property names for `CORN`.
 - Removed non-existent fields from `PRE2`.
@@ -30,8 +44,8 @@ The project *should be* compliant with all of the models used in the current cli
 - Optimized `Track<T>` loading. `Model` refactored.
 
 ### Null safety:
-- Added `GetItems<T>` for safe access to list-based chunks. If the chunk is missing, it returns an empty list. Added strongly-typed overloads (e.g., `GetBones()`, `GetTextures()`).
-- Animation tracks and their nodes list are now always initialized. Absent animations result in empty tracks instead of `null`.
+- Added `GetItems<T>` for safe access to list-based chunks. If the chunk is missing, it returns an empty list.
+- Animation tracks and their node arrays are now always initialized. Absent animations result in empty tracks instead of `null`.
 - Certain newer-format properties are now `nullable`.
 - Reworked `CLID`:
   - Introduced `ICollisionGeometry` interface.
@@ -41,6 +55,13 @@ The project *should be* compliant with all of the models used in the current cli
 - Public fields converted to `get`-only properties.
 - Tag comparisons now use centralized uint constants (`Tags` class) instead of string literals.
 - Project updated to `.NET 8.0`.
+
+### API usage improvements:
+- Added `ToString()` overrides for all major data classes to improve debugging.
+- Added new constructors for `Model` to support initialization from file path, `Stream`, or `BinaryReader`.
+- Added strongly-typed accessors for common chunks (e.g., `GetBones()`, `GetTextures()`), as convenience wrappers over `GetItems<T>()`.
+- Added helper methods to `Geoset` for accessing geometry indices: `EnumeratePrimitiveGroups`, `EnumerateTriangles` and `GetTriangleIndexBuffer`.
+- Added `GetTextureId(semantic)` method to `Layer` for easy texture lookup by purpose (e.g., diffuse, normal, emissive).
 
 ## Legacy
 

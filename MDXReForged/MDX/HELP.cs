@@ -24,5 +24,6 @@ namespace MDXReForged.MDX
 
             LoadTracks(br);
         }
+        public override string ToString() => $"Helper \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId})";
     }
 }

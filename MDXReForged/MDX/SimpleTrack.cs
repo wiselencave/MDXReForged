@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 
 namespace MDXReForged.MDX
 {
@@ -38,5 +39,15 @@ namespace MDXReForged.MDX
             }
         }
         public bool IsEmpty => ReferenceEquals(this, Empty);
+
+        public override string ToString()
+        {
+            if (IsEmpty)
+                return $"SimpleTrack<{Name}> (empty)";
+
+            string range = Time?.Length > 0 ? $" [{Time.First()}–{Time.Last()}]" : "";
+            return $"SimpleTrack \"{Name}\" — {Keys.Length} key(s){range}" +
+                   (GlobalSequenceId >= 0 ? $", GlobalSeqId: {GlobalSequenceId}" : "");
+        }
     }
 }

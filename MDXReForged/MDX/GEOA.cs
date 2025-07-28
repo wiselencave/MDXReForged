@@ -1,5 +1,6 @@
 ﻿using MDXReForged.Structs;
 using System.IO;
+using System.Linq;
 using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
@@ -30,8 +31,8 @@ namespace MDXReForged.MDX
 
             Alpha = br.ReadSingle();
             HasColorKeys = br.ReadInt32() == 1;
-            GeosetId = br.ReadInt32();
             Color = new CVector3(br);
+            GeosetId = br.ReadInt32();
 
             while (br.BaseStream.Position < end && !br.AtEnd())
             {
@@ -46,5 +47,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
+
+        public override string ToString() => $"GeosetAnimation — GeosetId: {GeosetId}, Color: {Color}, Alpha: {Alpha},\r\n\t Color Track: {ColorKeys}, Alpha Track: {AlphaKeys}";
     }
 }

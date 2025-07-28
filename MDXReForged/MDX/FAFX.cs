@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Xml.Linq;
 
 namespace MDXReForged.MDX
 {
@@ -19,5 +20,7 @@ namespace MDXReForged.MDX
     {
         public string Node { get; } = br.ReadCString(Constants.SizeName);
         public string FilePath { get; } = br.ReadCString(Constants.SizeFileName);
+
+        public override string ToString() => $"FaceFX — FilePath: {FilePath}";
     }
 }

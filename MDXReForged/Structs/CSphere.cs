@@ -13,5 +13,7 @@ namespace MDXReForged.Structs
             Center = new CVector3(br);
             Radius = br.ReadSingle();
         }
+
+        public override string ToString() =>$"Sphere — Center: {Center}, Radius: {Radius:0.000}";
     }
 }

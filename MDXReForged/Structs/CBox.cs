@@ -14,5 +14,7 @@ namespace MDXReForged.Structs
             Min = new CVector3(br);
             Max = new CVector3(br);
         }
+
+        public override string ToString() => $"Box — Min: {Min}, Max: {Max}";
     }
 }

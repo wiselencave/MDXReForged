@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 
 namespace MDXReForged.MDX
 {
@@ -23,6 +25,23 @@ namespace MDXReForged.MDX
             ReplaceableId = br.ReadUInt32();
             Image = br.ReadCString(Constants.SizeFileName);
             Flags = (TEXFLAGS)br.ReadUInt32();
+        }
+
+        private string FormatFlags()
+        {
+            return string.Join(" | ",
+                ((TEXFLAGS[])Enum.GetValues(typeof(TEXFLAGS)))
+                    .Where(flag => Flags.HasFlag(flag) && flag != 0));
+        }
+        public override string ToString()
+        {
+            string info = ReplaceableId != 0
+                ? $"ReplaceableId: {ReplaceableId}"
+                : $"Image: \"{Image}\"";
+
+            string flags = Flags != 0 ? $" — Flags: {FormatFlags()}" : "";
+
+            return $"Texture ({info}){flags}";
         }
     }
 }

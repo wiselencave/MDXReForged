@@ -13,6 +13,6 @@ namespace MDXReForged.Structs
             Extent = new CBox(br);
         }
 
-        public override string ToString() => $"R: {Radius}, Min: {Extent.Min.ToString()}, Max: {Extent.Max.ToString()}";
+        public override string ToString() => $"Extent — Radius: {Radius:0.000}, Min: {Extent.Min}, Max: {Extent.Max}";
     }
 }

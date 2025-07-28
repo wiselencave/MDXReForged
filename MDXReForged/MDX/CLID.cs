@@ -1,5 +1,6 @@
 ﻿using MDXReForged.Structs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MDXReForged.MDX
@@ -54,5 +55,8 @@ namespace MDXReForged.MDX
         {
             GEOM_SHAPE ShapeType { get; }
         }
+
+        public override string ToString() => 
+            $"Collision Shape \"{Name}\" (ObjectId: {ObjectId}, Parent: {ParentId}) — Type: {Geometry.ShapeType}, Geometry: {Geometry}";
     }
 }
