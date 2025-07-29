@@ -3,6 +3,12 @@
 A cleaned-up, extended parser for Warcraft 3: Reforged `.mdx` model files.
 
 This project is a fork of [barncastle/MDXReForged](https://github.com/barncastle/MDXReForged), originally started in 2019 as an experimental reader.  
+
+> **Legal Note:**  
+> Original repository does **not** include a license.  All rights remain with the original author.  
+> This fork is maintained for personal research and experimentation only.  
+> If the original author has any concerns or wishes to discuss licensing, please contact me.
+
 Support has been expanded to cover MDX1000–MDX1200 formats, with architectural refactoring, improved null safety, and moderate performance improvements.
 
 ## Usage
