@@ -21,8 +21,7 @@ namespace MDXReForged.MDX
         public int PriorityPlane { get; }
         public string Shader { get; }
         public uint Flags { get; }
-        public uint NrOfLayers { get; }
-        public List<Layer> Layers { get; } = new List<Layer>();
+        public IReadOnlyList<Layer> Layers { get; }
 
         public Material(BinaryReader br, uint version)
         {
@@ -33,11 +32,16 @@ namespace MDXReForged.MDX
             if (version >= 900 && version < 1100)
                 Shader = br.ReadCString(Constants.SizeName);
 
-            br.AssertTag(Tags.LAYS);   
-            NrOfLayers = br.ReadUInt32();
-            for (int i = 0; i < NrOfLayers; i++)
-                Layers.Add(new Layer(br, version));
+            br.AssertTag(Tags.LAYS);
+            
+            uint count = br.ReadUInt32();
+            var layers = new Layer[count];
+            for (int i = 0; i < count; i++)
+                layers[i] = new Layer(br, version);
+            
+            Layers = layers;
         }
+
         public override string ToString()
         {
             string shaderInfo = string.IsNullOrEmpty(Shader) ? "" : $"Shader: \"{Shader}\", ";
