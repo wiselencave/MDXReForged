@@ -63,6 +63,7 @@ Console.WriteLine(model.GetDetailedInfo());
 ### Architectural changes:
 - Public fields converted to `get`-only properties.
 - Tag comparisons now use centralized uint constants (`Tags` class) instead of string literals.
+- Header validation, smarter chunk parsing (logs/skips unknown types, detects size and version issues).
 - Project updated to `.NET 8.0`.
 
 ### API usage improvements:

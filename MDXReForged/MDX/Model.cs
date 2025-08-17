@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using static MDXReForged.Tags;
 
 namespace MDXReForged.MDX
 {
     public class Model
     {
+        private const string ExpectedMagic = "MDLX";
+        private readonly static uint[] KnownVersions = [800, 900, 1000, 1100, 1200];
         public string BaseFile { get; }
         public string Magic { get; private set; }
         public IReadOnlyList<BaseChunk> Chunks { get; private set; }
@@ -20,6 +21,7 @@ namespace MDXReForged.MDX
         public CExtent Bounds => Get<MODL>().Bounds;
         public uint BlendTime => Get<MODL>().BlendTime;
         public uint Version { get; private set; } = 0;
+        public Action<string> UnknownChunkLogger { get; set; } = s => Console.WriteLine(s);
 
         public Model(string file)
         {
@@ -46,6 +48,10 @@ namespace MDXReForged.MDX
         {
             var chunks = new List<BaseChunk>();
             Magic = br.ReadString(4);
+
+            if (Magic != ExpectedMagic)
+                throw new InvalidDataException($"Invalid magic '{Magic}', expected '{ExpectedMagic}'.");
+
             while (!br.AtEnd())
                 ReadChunk(br, chunks);
 
@@ -53,6 +59,83 @@ namespace MDXReForged.MDX
             PopulateHierarchy();
         }
 
+        private void ReadChunk(BinaryReader br, List<BaseChunk> chunks)
+        {
+            // no point parsing last 8 bytes as it's either padding or an empty chunk
+            if (br.BaseStream.Length - br.BaseStream.Position <= 8)
+                return;
+
+            long start = br.BaseStream.Position;
+            uint tag = br.ReadUInt32Tag();
+            if (ChunkFactories.TryGetValue(tag, out var factory))
+            {
+                br.BaseStream.Position = start;
+                var chunk = factory(br, Version);
+
+                if (Version == 0 && chunk is VERS vers)
+                {
+                    Version = vers.FormatVersion;
+                    if (!KnownVersions.Contains(Version))
+                        Console.WriteLine($"[WARNING] Unknown format version {Version}");
+                }    
+
+                long expectedEnd = start + 8 + chunk.Size;
+
+                if (br.BaseStream.Position != expectedEnd)
+                {
+                    UnknownChunkLogger?.Invoke($"[WARNING] Chunk {chunk.Type} at {start} size mismatch: declared {chunk.Size}, read {br.BaseStream.Position - start - 8}");
+                    br.BaseStream.Position = expectedEnd;
+                }
+
+                chunks.Add(chunk);
+            }
+            else
+            {
+                uint size = br.ReadUInt32();
+                UnknownChunkLogger?.Invoke($"[WARNING] Unknown type {Extensions.TagToString(tag)} at {start}, skipping {size} bytes");
+                br.BaseStream.Seek(size, SeekOrigin.Current);
+            }
+        }
+
+        private void PopulateHierarchy()
+        {
+            var hierachy = new List<GenObject>();
+
+            // inherits MDLGENOBJECT
+            foreach (var chunk in Chunks)
+                if (chunk is IReadOnlyList<GenObject> collection)
+                    hierachy.AddRange(collection);
+
+            hierachy.Sort((x, y) => x.ObjectId.CompareTo(y.ObjectId));
+            Hierarchy = hierachy;
+        }
+
+        private static readonly Dictionary<uint, Func<BinaryReader, uint, BaseChunk>> ChunkFactories = new Dictionary<uint, Func<BinaryReader, uint, BaseChunk>>
+        {
+            { Tags.VERS, (br, version) => new VERS(br, version) },
+            { Tags.MODL, (br, version) => new MODL(br, version) },
+            { Tags.SEQS, (br, version) => new SEQS(br, version) },
+            { Tags.MTLS, (br, version) => new MTLS(br, version) },
+            { Tags.TEXS, (br, version) => new TEXS(br, version) },
+            { Tags.GEOS, (br, version) => new GEOS(br, version) },
+            { Tags.BONE, (br, version) => new BONE(br, version) },
+            { Tags.HELP, (br, version) => new HELP(br, version) },
+            { Tags.ATCH, (br, version) => new ATCH(br, version) },
+            { Tags.PIVT, (br, version) => new PIVT(br, version) },
+            { Tags.CAMS, (br, version) => new CAMS(br, version) },
+            { Tags.EVTS, (br, version) => new EVTS(br, version) },
+            { Tags.CLID, (br, version) => new CLID(br, version) },
+            { Tags.GLBS, (br, version) => new GLBS(br, version) },
+            { Tags.GEOA, (br, version) => new GEOA(br, version) },
+            { Tags.PRE2, (br, version) => new PRE2(br, version) },
+            { Tags.RIBB, (br, version) => new RIBB(br, version) },
+            { Tags.LITE, (br, version) => new LITE(br, version) },
+            { Tags.TXAN, (br, version) => new TXAN(br, version) },
+            { Tags.BPOS, (br, version) => new BPOS(br, version) },
+            { Tags.FAFX, (br, version) => new FAFX(br, version) },
+            { Tags.PREM, (br, version) => new PREM(br, version) },
+            { Tags.CORN, (br, version) => new CORN(br, version) },
+        };
         public bool Has<T>() where T : BaseChunk => Chunks.Any(x => x is T);
 
         /// <summary>
@@ -183,69 +266,6 @@ namespace MDXReForged.MDX
         /// Returns a list of PopcornFX particle emitters from the CORN chunk.
         /// </summary>
         public IReadOnlyList<ParticleEmitterPopcorn> GetCornEmitters() => GetItems<CORN, ParticleEmitterPopcorn>();
-
-        private void ReadChunk(BinaryReader br, List<BaseChunk> chunks)
-        {
-            // no point parsing last 8 bytes as it's either padding or an empty chunk
-            if (br.BaseStream.Length - br.BaseStream.Position <= 8)
-                return;
-
-            uint tag = br.ReadUInt32Tag();
-            if (ChunkFactories.TryGetValue(tag, out var factory))
-            {
-                br.BaseStream.Position -= 4;
-                var chunk = factory(br, Version);
-
-                if (Version == 0 && chunk is VERS vers)
-                    Version = vers.FormatVersion;
-
-                chunks.Add(chunk);
-            }
-            else
-            {
-                throw new Exception($"Unknown type {Extensions.TagToString(tag)}");
-            }
-        }
-
-        private void PopulateHierarchy()
-        {
-            var hierachy = new List<GenObject>();
-
-            // inherits MDLGENOBJECT
-            foreach (var chunk in Chunks)
-                if (chunk is IReadOnlyList<GenObject> collection)
-                    hierachy.AddRange(collection);
-
-            hierachy.Sort((x, y) => x.ObjectId.CompareTo(y.ObjectId));
-            Hierarchy = hierachy;
-        }
-
-        private static readonly Dictionary<uint, Func<BinaryReader, uint, BaseChunk>> ChunkFactories = new Dictionary<uint, Func<BinaryReader, uint, BaseChunk>>
-        {
-            { Tags.VERS, (br, version) => new VERS(br, version) },
-            { Tags.MODL, (br, version) => new MODL(br, version) },
-            { Tags.SEQS, (br, version) => new SEQS(br, version) },
-            { Tags.MTLS, (br, version) => new MTLS(br, version) },
-            { Tags.TEXS, (br, version) => new TEXS(br, version) },
-            { Tags.GEOS, (br, version) => new GEOS(br, version) },
-            { Tags.BONE, (br, version) => new BONE(br, version) },
-            { Tags.HELP, (br, version) => new HELP(br, version) },
-            { Tags.ATCH, (br, version) => new ATCH(br, version) },
-            { Tags.PIVT, (br, version) => new PIVT(br, version) },
-            { Tags.CAMS, (br, version) => new CAMS(br, version) },
-            { Tags.EVTS, (br, version) => new EVTS(br, version) },
-            { Tags.CLID, (br, version) => new CLID(br, version) },
-            { Tags.GLBS, (br, version) => new GLBS(br, version) },
-            { Tags.GEOA, (br, version) => new GEOA(br, version) },
-            { Tags.PRE2, (br, version) => new PRE2(br, version) },
-            { Tags.RIBB, (br, version) => new RIBB(br, version) },
-            { Tags.LITE, (br, version) => new LITE(br, version) },
-            { Tags.TXAN, (br, version) => new TXAN(br, version) },
-            { Tags.BPOS, (br, version) => new BPOS(br, version) },
-            { Tags.FAFX, (br, version) => new FAFX(br, version) },
-            { Tags.PREM, (br, version) => new PREM(br, version) },
-            { Tags.CORN, (br, version) => new CORN(br, version) },
-        };
 
         /// <summary>
         /// Returns a multiline string containing detailed information about the model.
