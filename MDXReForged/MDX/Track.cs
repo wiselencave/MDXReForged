@@ -9,7 +9,7 @@ namespace MDXReForged.MDX
         public static readonly Track<T> Empty = new Track<T>();
         public string Name { get; private set; }
         public uint NrOfTracks { get; private set; }
-        public MDLTRACKTYPE InterpolationType { get; private set; }
+        public InterpolationType InterpolationType { get; private set; }
         public int GlobalSequenceId { get; private set; }
         public CAnimatorNode<T>[] Nodes { get; private set; }
 
@@ -45,7 +45,7 @@ namespace MDXReForged.MDX
         {
             Name = Extensions.TagToString(tag);
             NrOfTracks = br.ReadUInt32();
-            InterpolationType = (MDLTRACKTYPE)br.ReadUInt32();
+            InterpolationType = (InterpolationType)br.ReadUInt32();
             GlobalSequenceId = br.ReadInt32();
 
             Nodes = new CAnimatorNode<T>[NrOfTracks];
@@ -54,7 +54,7 @@ namespace MDXReForged.MDX
                 uint Time = br.ReadUInt32();
                 T Value = ReadValue(br);
 
-                if (InterpolationType > MDLTRACKTYPE.TRACK_LINEAR)
+                if (InterpolationType > InterpolationType.Linear)
                 {
                     T InTangent = ReadValue(br);
                     T OutTangent = ReadValue(br);

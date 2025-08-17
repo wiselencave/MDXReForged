@@ -25,17 +25,17 @@ namespace MDXReForged.MDX
             Name = br.ReadCString(Constants.SizeName);
             ObjectId = br.ReadInt32();
             ParentId = br.ReadInt32();
-            Flags = (GENOBJECTFLAGS)br.ReadUInt32();
+            Flags = (GenObjectFlags)br.ReadUInt32();
 
             LoadTracks(br);
 
-            var type = (GEOM_SHAPE)br.ReadUInt32();
+            var type = (GeometryShape)br.ReadUInt32();
             Geometry = type switch
             {
-                GEOM_SHAPE.SHAPE_BOX => new CBox(br),
-                GEOM_SHAPE.SHAPE_SPHERE => new CSphere(br),
-                GEOM_SHAPE.SHAPE_PLANE => new CPlane(br),
-                GEOM_SHAPE.SHAPE_CYLINDER => new CCylinder(br),
+                GeometryShape.Box => new CBox(br),
+                GeometryShape.Sphere => new CSphere(br),
+                GeometryShape.Plane => new CPlane(br),
+                GeometryShape.Cylinder => new CCylinder(br),
                 _ => throw new NotSupportedException($"Unknown shape: {type}")
             };
         }
@@ -53,7 +53,7 @@ namespace MDXReForged.MDX
 
         public interface ICollisionGeometry
         {
-            GEOM_SHAPE ShapeType { get; }
+            GeometryShape ShapeType { get; }
         }
 
         public override string ToString() => 

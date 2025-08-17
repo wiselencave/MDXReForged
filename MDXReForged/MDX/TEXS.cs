@@ -18,19 +18,19 @@ namespace MDXReForged.MDX
     {
         public uint ReplaceableId { get; }
         public string Image { get; }
-        public TEXFLAGS Flags { get; }
+        public TextureFlags Flags { get; }
 
         public Texture(BinaryReader br)
         {
             ReplaceableId = br.ReadUInt32();
             Image = br.ReadCString(Constants.SizeFileName);
-            Flags = (TEXFLAGS)br.ReadUInt32();
+            Flags = (TextureFlags)br.ReadUInt32();
         }
 
         private string FormatFlags()
         {
             return string.Join(" | ",
-                ((TEXFLAGS[])Enum.GetValues(typeof(TEXFLAGS)))
+                ((TextureFlags[])Enum.GetValues(typeof(TextureFlags)))
                     .Where(flag => Flags.HasFlag(flag) && flag != 0));
         }
         public override string ToString()

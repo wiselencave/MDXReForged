@@ -72,3 +72,4 @@ Console.WriteLine(model.GetDetailedInfo());
 - Added strongly-typed accessors for common chunks (e.g., `GetBones()`, `GetTextures()`), as convenience wrappers over `GetItems<T>()`.
 - Added helper methods to `Geoset` for accessing geometry indices: `EnumeratePrimitiveGroups`, `EnumerateTriangles` and `GetTriangleIndexBuffer`.
 - Added `GetTextureId(semantic)` method to `Layer` for easy texture lookup by purpose (e.g., diffuse, normal, emissive).
+- Refactored all enums to use .NET naming conventions.

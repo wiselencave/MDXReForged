@@ -44,7 +44,7 @@ namespace MDXReForged.MDX
             Name = br.ReadCString(Constants.SizeName);
             ObjectId = br.ReadInt32();
             ParentId = br.ReadInt32();
-            Flags = (GENOBJECTFLAGS)br.ReadUInt32();
+            Flags = (GenObjectFlags)br.ReadUInt32();
 
             LoadTracks(br);
 

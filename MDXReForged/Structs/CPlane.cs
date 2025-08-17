@@ -8,7 +8,7 @@ namespace MDXReForged.Structs
         public readonly float Length;
         public readonly float Width;
 
-        public GEOM_SHAPE ShapeType => GEOM_SHAPE.SHAPE_PLANE;
+        public GeometryShape ShapeType => GeometryShape.Plane;
         public CPlane(BinaryReader br)
         {
             Length = br.ReadSingle();

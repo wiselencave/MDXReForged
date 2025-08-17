@@ -11,146 +11,140 @@ namespace MDXReForged
 
     #region ENUMS
 
-    public enum LIGHT_TYPE
+    public enum LightType : uint
     {
-        LIGHTTYPE_OMNI = 0x0,
-        LIGHTTYPE_DIRECT = 0x1,
-        LIGHTTYPE_AMBIENT = 0x2,
-        NUM_MDL_LIGHT_TYPES = 0x3,
+        Omni = 0,
+        Directional = 1,
+        Ambient = 2
     }
 
-    public enum GEOM_SHAPE
+    public enum GeometryShape : uint
     {
-        SHAPE_BOX = 0x0,
-        SHAPE_CYLINDER = 0x1,
-        SHAPE_SPHERE = 0x2,
-        SHAPE_PLANE = 0x3,
-        NUM_SHAPES = 0x4,
+        Box = 0,
+        Cylinder = 1,
+        Sphere = 2,
+        Plane = 3,
     }
 
-    public enum LAYER_FILTER_MODE
+    public enum BlendMode : uint
     {
-        FILTER_NONE = 0x0,
-        FILTER_TRANSPARENT = 0x1,
-        FILTER_BLEND = 0x2,
-        FILTER_ADD = 0x3,
-        FILTER_ADD_ALPHA = 0x4,
-        FILTER_MODULATE = 0x5,
-        FILTER_MODULATE2X = 0x6,
-        NUM_FILTER = 0x7,
+        None = 0,
+        Transparent = 1,
+        Blend = 2,
+        Add = 3,
+        AddAlpha = 4,
+        Modulate = 5,
+        Modulate2x = 6
     }
 
     [Flags]
-    public enum MDLGEO
+    public enum ShadingFlags : uint
     {
-        MODEL_GEO_UNSHADED = 0x1,
-        MODEL_GEO_SPHERE_ENV_MAP = 0x2,  // unused
-        MODEL_GEO_WRAPWIDTH = 0x4,       // unused
-        MODEL_GEO_WRAPHEIGHT = 0x8,      // unused
-        MODEL_GEO_TWOSIDED = 0x10,
-        MODEL_GEO_UNFOGGED = 0x20,
-        MODEL_GEO_NO_DEPTH_TEST = 0x40,
-        MODEL_GEO_NO_DEPTH_SET = 0x80,
+        Unshaded = 0x1,
+        SphereEnvMap = 0x2,   // unused
+        WrapWidth = 0x4,   // unused
+        WrapHeight = 0x8,   // unused
+        TwoSided = 0x10,
+        Unfogged = 0x20,
+        NoDepthTest = 0x40,
+        NoDepthSet = 0x80
     }
 
-    public enum PARTICLE_BLEND_MODE
+    public enum FilterMode : uint
     {
-        PBM_BLEND = 0x0,
-        PBM_ADD = 0x1,
-        PBM_MODULATE = 0x2,
-        PBM_MODULATE_2X = 0x3,
-        PBM_ALPHA_KEY = 0x4,
-        NUM_PARTICLE_BLEND_MODES = 0x5,
+        Blend = 0,
+        Add = 1,
+        Modulate = 2,
+        Modulate2x = 3,
+        AlphaKey = 4
     }
 
-    public enum PARTICLE_TYPE
+    public enum ParticleType : uint
     {
-        PT_HEAD = 0x0,
-        PT_TAIL = 0x1,
-        PT_BOTH = 0x2,
-        NUM_PARTICLE_TYPES = 0x3,
+        Head = 0,
+        Tail = 1,
+        Both = 2
     }
 
-    public enum MDLTRACKTYPE
+    public enum InterpolationType : uint
     {
-        TRACK_NO_INTERP = 0x0,
-        TRACK_LINEAR = 0x1,
-        TRACK_HERMITE = 0x2,
-        TRACK_BEZIER = 0x3,
-        NUM_TRACK_TYPES = 0x4,
+        NoInterp = 0,
+        Linear = 1,
+        Hermite = 2,
+        Bezier = 3
     }
 
     [Flags]
-    public enum TEXFLAGS : uint
+    public enum TextureFlags : uint
     {
-        WRAPWIDTH = 1,
-        WRAPHEIGHT = 2
+        WrapWidth = 0x1,
+        WrapHeight = 0x2
     }
 
     [Flags]
-    public enum GENOBJECTFLAGS : uint
+    public enum GenObjectFlags : uint
     {
-        DONT_INHERIT_TRANSLATION = 0x00000001,
-        DONT_INHERIT_SCALING = 0x00000002,
-        DONT_INHERIT_ROTATION = 0x00000004,
-        BILLBOARD = 0x00000008,
-        BILLBOARD_LOCK_X = 0x00000010,
-        BILLBOARD_LOCK_Y = 0x00000020,
-        BILLBOARD_LOCK_Z = 0x00000040,
-        CAMERA_ANCHORED = 0x00000080,
-        GENOBJECT_MDLBONESECTION = 0x00000100,
-        GENOBJECT_MDLLIGHTSECTION = 0x00000200,
-        GENOBJECT_MDLEVENTSECTION = 0x00000400,
-        GENOBJECT_MDLATTACHMENTSECTION = 0x00000800,
-        GENOBJECT_MDLPARTICLEEMITTER = 0x00001000,
-        GENOBJECT_MDLHITTESTSHAPE = 0x00002000,
-        GENOBJECT_MDLRIBBONEMITTER = 0x00004000,
-        EMITTER_USES_MDL = 0x00008000,
-        UNSHADED = 0x00008000,
-        EMITTER_USES_TGA = 0x00010000,
-        SORT_PRIMITIVES_FAR_Z = 0x00010000,
-        LINE_EMITTER = 0x00020000,
-        PARTICLE_UNFOGGED = 0x00040000,
-        PARTICLE_USE_MODEL_SPACE = 0x00080000,
-        PARTICLE_XYQUADS = 0x00100000,
+        DontInheritTranslation = 0x00000001,
+        DontInheritScaling = 0x00000002,
+        DontInheritRotation = 0x00000004,
+        Billboarded = 0x00000008,
+        BillboardedLockX = 0x00000010,
+        BillboardedLockY = 0x00000020,
+        BillboardedLockZ = 0x00000040,
+        CameraAnchored = 0x00000080,
+        BoneSection = 0x00000100,
+        LightSection = 0x00000200,
+        EventSection = 0x00000400,
+        AttachmentSection = 0x00000800,
+        ParticleEmitter = 0x00001000,
+        HitTestShape = 0x00002000,
+        RibbonEmitter = 0x00004000,
+        EmitterUsesModel = 0x00008000,
+        Unshaded = 0x00008000,
+        EmitterUsesTga = 0x00010000,
+        SortPrimitivesFarZ = 0x00010000,
+        LineEmitter = 0x00020000,
+        ParticleUnfogged = 0x00040000,
+        ParticleUseModelSpace = 0x00080000,
+        ParticleXYQuads = 0x00100000,
     }
 
-    public enum PRIMITIVE_TYPE : uint
+    public enum PrimitiveType : uint
     {
-        TYPE_POINTS = 0,
-        TYPE_LINES = 1,
-        TYPE_LINELOOP = 2,
-        TYPE_LINESTRIP = 3,
-        TYPE_TRIANGLES = 4,
-        TYPE_TRIANGLESTRIP = 5,
-        TYPE_TRIANGLEFAN = 6,
-        TYPE_QUADS = 7,
-        TYPE_QUADSTRIP = 8,
-        TYPE_POLYGONS = 9
+        Points = 0,
+        Lines = 1,
+        LineLoop = 2,
+        LineStrip = 3,
+        Triangles = 4,
+        TriangleStrip = 5,
+        TriangleFan = 6,
+        Quands = 7,
+        QuadStrip = 8,
+        Polygons = 9
     }
 
-    public enum LAYER_SHADER : uint
+    public enum LayerShader : uint
     {
-        LAYER_SHADER_SD = 0,
-        LAYER_SHADER_HD = 1
+        SD = 0,
+        HD = 1
     }
 
-    public enum TEXTURE_SEMANTIC : uint
+    public enum TextureSemantic : uint
     {
-        TEXTURE_SEMANTIC_DIFFUSE = 0,
-        TEXTURE_SEMANTIC_NORMAL = 1,
-        TEXTURE_SEMANTIC_ORM = 2,
-        TEXTURE_SEMANTIC_EMISSIVE = 3,
-        TEXTURE_SEMANTIC_TEAMCOLOR = 4,
-        TEXTURE_SEMANTIC_REFLECTION = 5
+        Diffuse = 0,
+        Normal = 1,
+        ORM = 2,
+        Emissive = 3,
+        TeamColor = 4,
+        Reflection = 5
     }
 
-    public enum LEVEL_OF_DETAIL : uint
+    public enum LevelOfDetail : uint
     {
-        LOD_DEFAULT = 0,
-        LOD_HIGH = 1,
-        LOD_MEDIUM = 2,
-        LOD_LOW = 3
+        Default = 0,
+        High = 1,
+        Medium = 2,
+        Low = 3
     }
 
     #endregion ENUMS

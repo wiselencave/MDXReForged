@@ -24,10 +24,10 @@ namespace MDXReForged.MDX
         public float EmissionRate { get; }
         public float Length { get; }
         public float Width { get; }
-        public PARTICLE_BLEND_MODE BlendMode { get; }
+        public FilterMode BlendMode { get; }
         public int Rows { get; }
         public int Cols { get; }
-        public PARTICLE_TYPE ParticleType { get; }
+        public ParticleType ParticleType { get; }
         public float TailLength { get; }
         public float MiddleTime { get; }
         public CVector3 StartColor { get; }
@@ -73,7 +73,7 @@ namespace MDXReForged.MDX
             Name = br.ReadCString(Constants.SizeName);
             ObjectId = br.ReadInt32();
             ParentId = br.ReadInt32();
-            Flags = (GENOBJECTFLAGS)br.ReadUInt32();
+            Flags = (GenObjectFlags)br.ReadUInt32();
 
             LoadTracks(br);
 
@@ -85,10 +85,10 @@ namespace MDXReForged.MDX
             EmissionRate = br.ReadSingle();
             Length = br.ReadSingle();
             Width = br.ReadSingle();
-            BlendMode = (PARTICLE_BLEND_MODE)br.ReadUInt32();
+            BlendMode = (FilterMode)br.ReadUInt32();
             Rows = br.ReadInt32();
             Cols = br.ReadInt32();
-            ParticleType = (PARTICLE_TYPE)br.ReadInt32();
+            ParticleType = (ParticleType)br.ReadInt32();
             TailLength = br.ReadSingle();
             MiddleTime = br.ReadSingle();
 

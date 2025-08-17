@@ -51,8 +51,8 @@ namespace MDXReForged.MDX
 
     public class Layer
     {
-        public LAYER_FILTER_MODE BlendMode { get; }
-        public MDLGEO Flags { get; }
+        public BlendMode BlendMode { get; }
+        public ShadingFlags Flags { get; }
         public uint TextureId { get; }
         public int TextureAnimationId { get; }
         public int CoordId { get; }
@@ -73,14 +73,14 @@ namespace MDXReForged.MDX
         public Track<float> FresnelTeamColorKeys { get; } = Track<float>.Empty;
 
         // If version >= 1100
-        public LAYER_SHADER? ShaderId { get; }
+        public LayerShader? ShaderId { get; }
         public IReadOnlyList<TextureEntry> Textures { get; }
 
         public Layer(BinaryReader br, uint version)
         {
             long end = br.BaseStream.Position + br.ReadUInt32();
-            BlendMode = (LAYER_FILTER_MODE)br.ReadInt32();
-            Flags = (MDLGEO)br.ReadUInt32();
+            BlendMode = (BlendMode)br.ReadInt32();
+            Flags = (ShadingFlags)br.ReadUInt32();
             TextureId = br.ReadUInt32();
             TextureAnimationId = br.ReadInt32();
             CoordId = br.ReadInt32();
@@ -98,7 +98,7 @@ namespace MDXReForged.MDX
             TextureEntry[] textures = [];
             if (version >= 1100)
             {
-                ShaderId = (LAYER_SHADER)br.ReadUInt32();
+                ShaderId = (LayerShader)br.ReadUInt32();
                 uint textureCount = br.ReadUInt32();
                 textures = new TextureEntry[textureCount];
 
@@ -107,7 +107,7 @@ namespace MDXReForged.MDX
                     var tex = new TextureEntry
                     {
                         TextureId = br.ReadUInt32(),
-                        Semantic = (TEXTURE_SEMANTIC)br.ReadUInt32()
+                        Semantic = (TextureSemantic)br.ReadUInt32()
                     };
 
                     uint maybeTag = br.ReadUInt32Tag();
@@ -147,7 +147,7 @@ namespace MDXReForged.MDX
                 }
             }
         }
-        public uint? GetTextureId(TEXTURE_SEMANTIC semantic)
+        public uint? GetTextureId(TextureSemantic semantic)
         {
             return Textures.FirstOrDefault(t => t.Semantic == semantic)?.TextureId;
         }
@@ -162,7 +162,7 @@ namespace MDXReForged.MDX
     public class TextureEntry
     {
         public uint TextureId { get; internal set; }
-        public TEXTURE_SEMANTIC Semantic { get; internal set; }
+        public TextureSemantic Semantic { get; internal set; }
         public Track<int> FlipKeys { get; internal set; } = Track<int>.Empty;
         public override string ToString()
         {

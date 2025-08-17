@@ -27,7 +27,7 @@ namespace MDXReForged.MDX
         public IReadOnlyList<CVector3> Normals { get; }
         public IReadOnlyList<CVector4> Tangents { get; }
 
-        public IReadOnlyList<PRIMITIVE_TYPE> FaceTypes { get; }
+        public IReadOnlyList<PrimitiveType> FaceTypes { get; }
         public IReadOnlyList<uint> FaceGroups { get; }
         public IReadOnlyList<ushort> FaceIndices { get; }
 
@@ -43,7 +43,7 @@ namespace MDXReForged.MDX
         public CExtent Bounds { get; }
         public uint SelectionGroup { get; }
         public bool Unselectable { get; }
-        public LEVEL_OF_DETAIL Level { get; }
+        public LevelOfDetail Level { get; }
         public string Name { get; }
         public uint GeosetId { get; }
 
@@ -55,7 +55,7 @@ namespace MDXReForged.MDX
             CVector3[] normals = [];
             CVector4[] tangents = [];
 
-            PRIMITIVE_TYPE[] faceTypes = [];
+            PrimitiveType[] faceTypes = [];
             uint[] faceGroups = [];
             ushort[] faceIndices = [];
 
@@ -89,9 +89,9 @@ namespace MDXReForged.MDX
             if (br.HasTag(PTYP))
             {
                 uint count = br.ReadUInt32();
-                faceTypes = new PRIMITIVE_TYPE[count];
+                faceTypes = new PrimitiveType[count];
                 for (int i = 0; i < count; i++)
-                    faceTypes[i] = (PRIMITIVE_TYPE)br.ReadUInt32();
+                    faceTypes[i] = (PrimitiveType)br.ReadUInt32();
             }
 
             if (br.HasTag(PCNT))
@@ -138,7 +138,7 @@ namespace MDXReForged.MDX
 
             if (version >= 900)
             {
-                Level = (LEVEL_OF_DETAIL)br.ReadUInt32();
+                Level = (LevelOfDetail)br.ReadUInt32();
                 Name = br.ReadCString(Constants.SizeName);
             }
 
@@ -201,7 +201,7 @@ namespace MDXReForged.MDX
             GeosetId = id;
         }
 
-        public bool IsAllTriangles => FaceTypes.All(t => t == PRIMITIVE_TYPE.TYPE_TRIANGLES);
+        public bool IsAllTriangles => FaceTypes.All(t => t == PrimitiveType.Triangles);
 
         /// <summary>
         /// Returns a flat index buffer, assuming the geoset contains only triangles.
@@ -217,7 +217,7 @@ namespace MDXReForged.MDX
         /// <summary>
         /// Enumerates face groups with their primitive type and corresponding indices.
         /// </summary>
-        public IEnumerable<(PRIMITIVE_TYPE Type, ushort[] Indices)> EnumeratePrimitiveGroups()
+        public IEnumerable<(PrimitiveType Type, ushort[] Indices)> EnumeratePrimitiveGroups()
         {
             if (FaceTypes.Count != FaceGroups.Count)
                 throw new InvalidOperationException("Mismatch between face type count and group size count.");
@@ -244,7 +244,7 @@ namespace MDXReForged.MDX
         {
             foreach (var (type, indices) in EnumeratePrimitiveGroups())
             {
-                if (type != PRIMITIVE_TYPE.TYPE_TRIANGLES || indices.Length % 3 != 0)
+                if (type != PrimitiveType.Triangles || indices.Length % 3 != 0)
                     continue;
 
                 for (int i = 0; i < indices.Length; i += 3)

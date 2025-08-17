@@ -16,7 +16,7 @@ namespace MDXReForged.MDX
 
     public class Light : GenObject
     {
-        public LIGHT_TYPE Type { get; }
+        public LightType Type { get; }
         public float AttenuationStart { get; }
         public float AttenuationEnd { get;  }
         public CVector3 Color { get; }
@@ -41,11 +41,11 @@ namespace MDXReForged.MDX
             Name = br.ReadCString(Constants.SizeName);
             ObjectId = br.ReadInt32();
             ParentId = br.ReadInt32();
-            Flags = (GENOBJECTFLAGS)br.ReadUInt32();
+            Flags = (GenObjectFlags)br.ReadUInt32();
 
             LoadTracks(br);
 
-            Type = (LIGHT_TYPE)br.ReadInt32();
+            Type = (LightType)br.ReadInt32();
             AttenuationStart = br.ReadSingle();
             AttenuationEnd = br.ReadSingle();
             Color = new CVector3(br);

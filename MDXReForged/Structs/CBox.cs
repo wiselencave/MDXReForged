@@ -7,7 +7,7 @@ namespace MDXReForged.Structs
     {
         public readonly CVector3 Min;
         public readonly CVector3 Max;
-        public GEOM_SHAPE ShapeType => GEOM_SHAPE.SHAPE_BOX;
+        public GeometryShape ShapeType => GeometryShape.Box;
 
         public CBox(BinaryReader br)
         {

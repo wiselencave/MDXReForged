@@ -12,7 +12,7 @@ namespace MDXReForged.MDX
         public string Name { get; protected set; }
         public int ObjectId { get; protected set; }
         public int ParentId { get; protected set; }
-        public GENOBJECTFLAGS Flags { get; protected set; }
+        public GenObjectFlags Flags { get; protected set; }
 
         public Track<CVector3> TranslationKeys { get; private set; } = Track<CVector3>.Empty;
         public Track<CVector4> RotationKeys { get; private set; } = Track<CVector4>.Empty;
@@ -50,8 +50,8 @@ namespace MDXReForged.MDX
                 return "None";
 
             return string.Join(" | ",
-                Enum.GetValues(typeof(GENOBJECTFLAGS))
-                    .Cast<GENOBJECTFLAGS>()
+                Enum.GetValues(typeof(GenObjectFlags))
+                    .Cast<GenObjectFlags>()
                     .Where(flag => Flags.HasFlag(flag) && flag != 0));
         }
 

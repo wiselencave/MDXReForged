@@ -7,7 +7,7 @@ namespace MDXReForged.Structs
     {
         public readonly CVector3 Center;
         public readonly float Radius;
-        public GEOM_SHAPE ShapeType => GEOM_SHAPE.SHAPE_SPHERE;
+        public GeometryShape ShapeType => GeometryShape.Sphere;
         public CSphere(BinaryReader br)
         {
             Center = new CVector3(br);

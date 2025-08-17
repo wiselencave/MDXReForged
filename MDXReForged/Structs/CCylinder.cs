@@ -8,7 +8,7 @@ namespace MDXReForged.Structs
         public readonly CVector3 Base;
         public readonly float Height;
         public readonly float Radius;
-        public GEOM_SHAPE ShapeType => GEOM_SHAPE.SHAPE_CYLINDER;
+        public GeometryShape ShapeType => GeometryShape.Cylinder;
         public CCylinder(BinaryReader br)
         {
             Base = new CVector3(br);
