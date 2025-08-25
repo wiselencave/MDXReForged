@@ -29,7 +29,8 @@ namespace MDXReForged.MDX
 
         public IReadOnlyList<PrimitiveType> FaceTypes { get; }
         public IReadOnlyList<uint> FaceGroups { get; }
-        public IReadOnlyList<ushort> FaceIndices { get; }
+        public IReadOnlyList<ushort> FaceIndices => _faceIndices;
+        private readonly ushort[] _faceIndices;
 
         public IReadOnlyList<byte> VertexGroupIndices { get; }
         public IReadOnlyList<uint> MatrixGroups { get; }
@@ -191,7 +192,7 @@ namespace MDXReForged.MDX
             Tangents = tangents;
             FaceTypes = faceTypes;
             FaceGroups = faceGroups;
-            FaceIndices = faceIndices;
+            _faceIndices = faceIndices;
             VertexGroupIndices = vertexGroups;
             MatrixGroups = matrixGroups;
             MatrixIndexes = matrixIndexes;
@@ -204,14 +205,14 @@ namespace MDXReForged.MDX
         public bool IsAllTriangles => FaceTypes.All(t => t == PrimitiveType.Triangles);
 
         /// <summary>
-        /// Returns a flat index buffer, assuming the geoset contains only triangles.
+        /// Returns a flat index array, assuming the geoset contains only triangles.
         /// </summary>
-        public ushort[] GetTriangleIndexBuffer()
+        public ushort[] GetFlatTriangleIndices()
         {
             if (!IsAllTriangles)
                 throw new InvalidOperationException("Geoset contains non-triangle primitives.");
 
-            return FaceIndices.ToArray();
+            return _faceIndices;
         }
 
         /// <summary>
