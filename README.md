@@ -35,7 +35,7 @@ Console.WriteLine(model.GetDetailedInfo());
 - Added support for `MDX1000`. Updated `LAYS`.
 - Added support for `MDX1100`. Updated `MTLS`. Updated `LAYS`:
     - Added support for multi-texturing.
-    - Introduced new `TextureEntry` class that holds the texture ID, semantic, and optional flip track.
+    - Introduced new `TextureInfo` structure that holds the texture ID, semantic, and optional flip track.
     - Layers now can expose a `Textures` list instead of a single `TextureId`.
 - Added support for `MDX1200`. Updated `LITE`.
 - Reworked `GEOS`:
