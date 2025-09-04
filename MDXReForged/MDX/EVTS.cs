@@ -15,7 +15,7 @@ namespace MDXReForged.MDX
 
     public class Event : GenObject
     {
-        public SimpleTrack EventKeys { get; }
+        public SimpleTrack EventKeys { get; } = SimpleTrack.Empty;
 
         public Event(BinaryReader br)
         {
