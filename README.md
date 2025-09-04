@@ -45,7 +45,8 @@ Console.WriteLine(model.GetDetailedInfo());
 - Updated property names for `CORN`.
 - Removed unused placeholder fields from `PRE2`.
 - Refactored the `C34Matrix` structure.
-- Removed unused structures and fields. `SNDS` was removed.
+- Removed unused structures and fields. 
+- Legacy chunks: `SNDS`clarified, `SNEM` added.
 
 ### Performance improvements:
 - Core math and geometry types rewritten as structs instead of classes.

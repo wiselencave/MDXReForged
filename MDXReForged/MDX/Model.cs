@@ -135,6 +135,8 @@ namespace MDXReForged.MDX
             { Tags.FAFX, (br, version) => new FAFX(br, version) },
             { Tags.PREM, (br, version) => new PREM(br, version) },
             { Tags.CORN, (br, version) => new CORN(br, version) },
+            { Tags.SNDS, (br, version) => new SNDS(br, version) },
+            { Tags.SNEM, (br, version) => new SNEM(br, version) }
         };
         public bool Has<T>() where T : BaseChunk => Chunks.Any(x => x is T);
 
@@ -228,7 +230,7 @@ namespace MDXReForged.MDX
         public IReadOnlyList<GeosetAnimation> GetGeosetAnimations() => GetItems<GEOA, GeosetAnimation>();
 
         /// <summary>
-        /// Returns a list of ParticleEmitter2 objects from the PRE2 chunk.
+        /// Returns a list of particle emitters from the PRE2 chunk.
         /// </summary>
         public IReadOnlyList<ParticleEmitter2> GetParticleEmitters2() => GetItems<PRE2, ParticleEmitter2>();
 
@@ -258,14 +260,24 @@ namespace MDXReForged.MDX
         public IReadOnlyList<FaceFX> GetFaceFX() => GetItems<FAFX, FaceFX>();
 
         /// <summary>
-        /// Returns a list of legacy particle emitters from the PREM chunk.
+        /// Returns a list of particle emitters from the PREM chunk.
         /// </summary>
         public IReadOnlyList<ParticleEmitter> GetParticleEmitters() => GetItems<PREM, ParticleEmitter>();
 
         /// <summary>
         /// Returns a list of PopcornFX particle emitters from the CORN chunk.
         /// </summary>
-        public IReadOnlyList<ParticleEmitterPopcorn> GetCornEmitters() => GetItems<CORN, ParticleEmitterPopcorn>();
+        public IReadOnlyList<ParticleEmitterPopcorn> GetPopcornFX() => GetItems<CORN, ParticleEmitterPopcorn>();
+
+        /// <summary>
+        /// Returns a list of sounds from the legacy SNDS chunk (unused in-game).
+        /// </summary>
+        public IReadOnlyList<Sound> GetSounds() => GetItems<SNDS, Sound>();
+
+        /// <summary>
+        /// Returns a list of sound emitters from the legacy SNEM chunk (unused in-game).
+        /// </summary>
+        public IReadOnlyList<SoundEmitter> GetSoundEmitters() => GetItems<SNEM, SoundEmitter>();
 
         /// <summary>
         /// Returns a multiline string containing detailed information about the model.
@@ -280,27 +292,29 @@ namespace MDXReForged.MDX
                 sb.AppendLine($"\t{label}: {GetItems<TChunk, TItem>().Count}");
             }
 
-            Append<SEQS, Sequence>("Sequences");
             Append<MTLS, Material>("Materials");
             Append<TEXS, Texture>("Textures");
+            Append<TXAN, TextureAnimation>("TextureAnimations");
+            Append<SEQS, Sequence>("Sequences");
+            Append<GLBS, int>("GlobalSequences");
             Append<GEOS, Geoset>("Geosets");
             Append<GEOA, GeosetAnimation>("GeosetAnimations");
             Append<BONE, Bone>("Bones");
             Append<HELP, Helper>("Helpers");
             Append<ATCH, Attachment>("Attachments");
-            Append<PIVT, CVector3>("Pivots");
             Append<CAMS, Camera>("Cameras");
             Append<EVTS, Event>("Events");
             Append<CLID, CollisionShape>("CollisionShapes");
-            Append<GLBS, int>("GlobalSequences");
+            Append<LITE, Light>("Lights");
             Append<PRE2, ParticleEmitter2>("ParticleEmitters2");
             Append<PREM, ParticleEmitter>("ParticleEmitters");
-            Append<CORN, ParticleEmitterPopcorn>("PopcornEmitters");
             Append<RIBB, RibbonEmitter>("RibbonEmitters");
-            Append<LITE, Light>("Lights");
-            Append<TXAN, TextureAnimation>("TextureAnimations");
-            Append<BPOS, C34Matrix>("BindPoses");
+            Append<CORN, ParticleEmitterPopcorn>("PopcornEmitters");
             Append<FAFX, FaceFX>("FaceFXNodes");
+            Append<PIVT, CVector3>("Pivots");
+            Append<BPOS, C34Matrix>("BindPoses");
+            Append<SNDS, Sound>("Sounds (legacy)");
+            Append<SNEM, SoundEmitter>("SoundEmitters (legacy)");
 
             return sb.ToString();
         }

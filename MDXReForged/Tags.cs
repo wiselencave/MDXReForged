@@ -64,6 +64,7 @@
         public const uint KRHB = 0x4248524B;
         public const uint KRTX = 0x5854524B;
         public const uint KRVS = 0x5356524B;
+        public const uint KSEK = 0x4B53454B;
         public const uint KTAR = 0x5241544B;
         public const uint KTAS = 0x5341544B;
         public const uint KTAT = 0x5441544B;
@@ -84,6 +85,8 @@
         public const uint RIBB = 0x42424952;
         public const uint SEQS = 0x53514553;
         public const uint SKIN = 0x4E494B53;
+        public const uint SNDS = 0x53444E53;
+        public const uint SNEM = 0x4D454E53;
         public const uint TANG = 0x474E4154;
         public const uint TEXS = 0x53584554;
         public const uint TXAN = 0x4E415854;
